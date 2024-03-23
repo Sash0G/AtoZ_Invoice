@@ -11,3 +11,4 @@ jobs:
     steps:
       - name: Run code
         run: cmd ./Python_Code/Builder.bat
+        
