@@ -172,8 +172,7 @@ def ChooseList(widget,table):
     else: 
         columns = (' ID',' Кораб')
         SearchBar(listWindow,table,1,addVessel,columns)
-    ShowData(listWindow,table,columns,1)
-    trv.bind('<Double-1>', lambda e: onDoubleClick(table))
+    ShowData(listWindow,table,columns,1,onDoubleClick)
     sEntry.bind('<Return>', lambda e: onDoubleClick(table))
 
 def editContract():
@@ -306,12 +305,10 @@ def updateContractInfo(k):
 def ReOpen(i):
     addWindow.destroy()
     dataShow.destroy()
-    ShowData(contractAddW,'contracts',(' ID',' Име',' Длъжност',' Ранг',' Тип на договора',' Номер',' Кораб',' Дата на качване',' Дата на слизане'),0)
+    ShowData(contractAddW,'contracts',(' ID',' Име',' Длъжност',' Ранг',' Тип на договора',' Номер',' Кораб',' Дата на качване',' Дата на слизане'),2,editContract)
     trv.selection_set(trv.get_children()[i]) 
     trv.after(0,lambda: trv.focus_set())
     trv.after(0,lambda: trv.focus(trv.get_children()[i]))
-    trv.bind('<Return>',lambda e:editContract())
-    trv.bind('<Double-1>',lambda e:editContract())
 
 def sortDate(t):
     if(t[0]!=''): return datetime.strptime(t[0], '%d/%m/%Y')
@@ -424,7 +421,7 @@ def SearchBar(window,table,t,func,columns):
     sEntry = ctk.CTkEntry(searchBar,font=('Arial', 12),fg_color='white',text_color='#242930')
     if t==1:
         sEntry.place(relwidth = 0.15, relheight = 0.8,relx=0.05,rely=0.2)
-        aButton = ctk.CTkButton(searchBar,image=img,text='',bg_color='#242930', fg_color='#242930',hover_color='#242930',command=lambda: [func(0),ShowData(window,table,columns,1),trv.bind('<Double-1>', lambda e: onDoubleClick(table)),sEntry.bind('<Return>', lambda e: onDoubleClick(table))],height=10*kH,width=10*kW)
+        aButton = ctk.CTkButton(searchBar,image=img,text='',bg_color='#242930', fg_color='#242930',hover_color='#242930',command=lambda: [func(0),ShowData(window,table,columns,1,onDoubleClick),sEntry.bind('<Return>', lambda e: onDoubleClick(table))],height=10*kH,width=10*kW)
         aButton.place(relx=0.2,rely=0.18)
     else: sEntry.place(relwidth = 0.15, relheight = 0.8,relx=0.03,rely=0.2)
     sEntry.after(0,sEntry.focus_force)
@@ -445,7 +442,7 @@ def NewWindow(window):
     window.bind_class("Entry", "<Button-3><ButtonRelease-3>", show_textmenu)
     window.bind_class("Entry", "<Control-a>", callback_select_all)
 
-def ShowData(window,table,columns,t):
+def ShowData(window,table,columns,t,editfunc):
     global dataShow
     dataShow = ctk.CTkFrame(window,bg_color='#242930', fg_color='#242930', border_width=0)
     if table == 'contracts': dataShow.place(relwidth=1,relheight=0.7,relx=0,rely=0.01)
@@ -466,6 +463,17 @@ def ShowData(window,table,columns,t):
     trv.column(' ID',width=35,minwidth=35,stretch=NO) 
     for i in range(1,len(columns)):
         trv.column(columns[i],width=100,stretch=YES)
+    trv.bind('<Delete>',lambda e: deleteRow(table))
+    if t==0:
+        trv.bind('<Double-1>',lambda e:[ eButton.place_forget(),editfunc()])
+        trv.bind('<Return>',lambda e:[ eButton.place_forget(),editfunc()])
+    if t==1:
+        trv.bind('<Double-1>',lambda e: editfunc(table))
+    if t==2:
+        trv.bind('<Double-1>',lambda e: editfunc())
+        trv.bind('<Return>',lambda e: editfunc())
+    
+        
     
     
 
@@ -500,9 +508,7 @@ def addPerson(flag):
     NewWindow(personAddW) #Window style
     SearchBar(personAddW,'personalDetails',0,0,0) #Search
     columns = (' ID',' Number',' Име',' Телефон',' Имейл') # Show data
-    ShowData(personAddW,'personalDetails',columns,0)
-    trv.bind('<Double-1>',lambda e:[ eButton.place_forget(),editPerson()])
-    trv.bind('<Return>',lambda e:[ eButton.place_forget(),editPerson()])
+    ShowData(personAddW,'personalDetails',columns,0,editPerson)
 
     global dataAdd,crewID,name,phone,mail,eButton
     dataAdd = ctk.CTkFrame(personAddW,height=250*kH,bg_color='#242930', fg_color='#242930', border_width=0)
@@ -520,7 +526,7 @@ def addPerson(flag):
     mail.place(relwidth = 0.17, relheight = 0.13,relx=0.1,rely=0.7)
     mailL =ctk.CTkLabel(dataAdd,text='Имейл:',text_color='white').place(relwidth = 0.03, relheight = 0.13,relx=0.05,rely=0.7)
     Ivan = ctk.CTkOptionMenu(dataAdd)
-    addButton =ctk.CTkButton(dataAdd, text='Добави',command=lambda: [addPersonData(),crewID.delete(0,END),name.delete(0,END),phone.delete(0,END),mail.delete(0,END),ShowData(personAddW,'personalDetails',columns,0)],fg_color="green",hover_color="darkgreen").place(relwidth = 0.037, relheight = 0.135,relx=0.1,rely=0.86)
+    addButton =ctk.CTkButton(dataAdd, text='Добави',command=lambda: [addPersonData(),crewID.delete(0,END),name.delete(0,END),phone.delete(0,END),mail.delete(0,END),ShowData(personAddW,'personalDetails',columns,0,editPerson)],fg_color="green",hover_color="darkgreen").place(relwidth = 0.037, relheight = 0.135,relx=0.1,rely=0.86)
     if flag==1:
         dButton =ctk.CTkButton(dataAdd,text='Изтрий', command=lambda: deleteRow('personalDetails'),fg_color="red",hover_color="darkred").place(relwidth = 0.037, relheight = 0.135,relx=0.142,rely=0.86)
         cButton = ctk.CTkButton(dataAdd,text='Изчисти', command=lambda: [crewID.delete(0,END),name.delete(0,END),phone.delete(0,END),mail.delete(0,END),eButton.place(relwidth = 0.045, relheight = 0.135,relx=0.226,rely=0.86),uButton.place_forget()]).place(relwidth = 0.037, relheight = 0.135,relx=0.184,rely=0.86)
@@ -537,12 +543,10 @@ def addContract():
     contractAddW.protocol("WM_DELETE_WINDOW",  root.destroy)
     NewWindow(contractAddW) 
     columns = (' ID',' Име',' Длъжност',' Ранг',' Тип на договора',' Номер',' Кораб',' Дата на качване',' Дата на слизане')
-    ShowData(contractAddW,'contracts',columns,0)
+    ShowData(contractAddW,'contracts',columns,2,editContract)
     trv.column(' ID',width=35,minwidth=35,stretch=NO) 
     for i in range(1,len(columns)):
         trv.column(columns[i],width=100,stretch=YES) 
-    trv.bind('<Return>',lambda e:editContract())
-    trv.bind('<Double-1>',lambda e:editContract())
     Ivan = ctk.CTkOptionMenu(contractAddW)
 
     addButton = ctk.CTkButton(contractAddW, text='Добави',command=lambda:[addContractData(0)],fg_color="green",hover_color="darkgreen").place(relwidth = 0.06, relheight = 0.04,relx=0.02,rely=0.9)
@@ -580,9 +584,7 @@ def addVessel(flag):
     NewWindow(vesselAddW) # Window style
     SearchBar(vesselAddW,'vessels',0,0,0) # Search
     columns = (' ID',' Кораб','Компания') # Show data
-    ShowData(vesselAddW,'vessels',columns,0)
-    trv.bind('<Double-1>',lambda e:[eButton.place_forget(),editVessel()])
-    trv.bind('<Return>',lambda e:[eButton.place_forget(),editVessel()])
+    ShowData(vesselAddW,'vessels',columns,0,editVessel)
     # Add data
     global dataAdd,name,company,eButton
     dataAdd = ctk.CTkFrame(vesselAddW,height=250*kH,bg_color='#242930', fg_color='#242930', border_width=0)
@@ -597,7 +599,7 @@ def addVessel(flag):
     Ivan = ctk.CTkOptionMenu(dataAdd)
 
     if flag==1:
-        addButton =ctk.CTkButton(dataAdd, text='Добави',command=lambda: [addVesselData(),name.delete(0,END),company.delete(0,END),ShowData(vesselAddW,'vessels',columns,0)],fg_color="green",hover_color="darkgreen").place(relwidth = 0.037, relheight = 0.135,relx=0.1,rely=0.63)
+        addButton =ctk.CTkButton(dataAdd, text='Добави',command=lambda: [addVesselData(),name.delete(0,END),company.delete(0,END),ShowData(vesselAddW,'vessels',columns,0,editVessel)],fg_color="green",hover_color="darkgreen").place(relwidth = 0.037, relheight = 0.135,relx=0.1,rely=0.63)
         dButton =ctk.CTkButton(dataAdd,text='Изтрий', command=lambda: deleteRow('vessels'),fg_color="red",hover_color="darkred").place(relwidth = 0.037, relheight = 0.135,relx=0.142,rely=0.63)
         cButton = ctk.CTkButton(dataAdd,text='Изчисти', command=lambda: [name.delete(0,END),company.delete(0,END),eButton.place(relwidth = 0.045, relheight = 0.135,relx=0.226,rely=0.63),uButton.place_forget()]).place(relwidth = 0.037, relheight = 0.135,relx=0.184,rely=0.63)
         eButton = ctk.CTkButton(dataAdd, text='Редактирай',command=lambda: [ eButton.place_forget(),editVessel()])
@@ -636,9 +638,7 @@ def addPosition(flag):
     NewWindow(positionAddW) #Window style
     SearchBar(positionAddW,'positions',0,0,0) #Search
     columns = (' ID',' Длъжност',' Ранг',' Департамент') # Show data
-    ShowData(positionAddW,'positions',columns,0)
-    trv.bind('<Double-1>',lambda e:[ eButton.place_forget(),editPosition()])
-    trv.bind('<Return>',lambda e:[ eButton.place_forget(),editPosition()])
+    ShowData(positionAddW,'positions',columns,0,editPosition)
     # Add data
     global dataAdd,position,rank,varTC,varR,eButton
 
@@ -658,7 +658,7 @@ def addPosition(flag):
     typeCrewL = ctk.CTkLabel(dataAdd,text='Департамент:',anchor=W).place(relwidth = 0.08, relheight = 0.1,relx=0.02,rely=0.65)
     typeCrew = ctk.CTkOptionMenu(dataAdd,values=['Deck and Engine','Hotel'],variable=varTC).place(relwidth = 0.168, relheight = 0.13,relx=0.1,rely=0.63)
 
-    addButton =ctk.CTkButton(dataAdd, text='Добави',command=lambda: [addPositionData(),position.delete(0,END),varR.set(""),varTC.set(""), ShowData(positionAddW,'positions',columns,0)],fg_color="green",hover_color="darkgreen").place(relwidth = 0.037, relheight = 0.135,relx=0.1,rely=0.86)
+    addButton =ctk.CTkButton(dataAdd, text='Добави',command=lambda: [addPositionData(),position.delete(0,END),varR.set(""),varTC.set(""), ShowData(positionAddW,'positions',columns,0,editPosition)],fg_color="green",hover_color="darkgreen").place(relwidth = 0.037, relheight = 0.135,relx=0.1,rely=0.86)
     if flag==1:
         dButton  =ctk.CTkButton(dataAdd,text='Изтрий', command=lambda: deleteRow('positions'),fg_color="red",hover_color="darkred").place(relwidth = 0.037, relheight = 0.135,relx=0.142,rely=0.86)
         cButton = ctk.CTkButton(dataAdd,text='Изчисти', command=lambda: [position.delete(0,END),varR.set(""),varTC.set(""),eButton.place(relwidth = 0.045, relheight = 0.13,relx=0.226,rely=0.86),uButton.place_forget()]).place(relwidth = 0.037, relheight = 0.135,relx=0.184,rely=0.86)
@@ -924,7 +924,7 @@ def Price():
     addPriceW.grab_set()
     NewSmallWindow(addPriceW)
     columns = (' ID',' Валидно от')
-    ShowData(addPriceW,'prices',columns,0)
+    ShowData(addPriceW,'prices',columns,2)
     # dataShow.an="#363c45"
     dataShow.configure( bg_color='#363c45',fg_color='#363c45')
     treestyle = ttk.Style()
