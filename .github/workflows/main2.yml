@@ -1,0 +1,13 @@
+name: Builder
+on: 
+  push:
+    branches: [ main ]
+  pull_request: 
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Run code
+        run: cmd ./Python_Code/Builder.bat
