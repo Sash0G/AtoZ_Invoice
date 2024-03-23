@@ -70,7 +70,7 @@ def addPositionData():
         defaultData('positions')
 
 def addPersonData():
-    if name.get()=='' or phone.get()=='' or mail.get()=='' or crewID.get()=='':
+    if name.get()=='' or crewID.get()=='':
         return
     else:
         conn = sqlite3.connect(pathGlobal+'/data.db')
@@ -96,20 +96,20 @@ def onDoubleClick(table):
     conn = sqlite3.connect(pathGlobal+'/data.db')
     c = conn.cursor()
     if table == 'personalDetails':
-        name.delete(0,END)
-        name.insert(0,item['values'][2])
+        nameE.delete(0,END)
+        nameE.insert(0,item['values'][2])
         global crewID
         crewID = item['values'][0]
     elif table == 'positions':
-        position.delete(0,END)
-        position.insert(0,item['values'][1])
+        positionE.delete(0,END)
+        positionE.insert(0,item['values'][1])
         global positionID
         positionID = item['values'][0]
     else:
         global vesselID
         vesselID=item['values'][0]
-        vessel.delete(0,END)
-        vessel.insert(0,item['values'][1])
+        vesselE.delete(0,END)
+        vesselE.insert(0,item['values'][1])
     conn.commit()
     conn.close()
     listWindow.destroy()
@@ -162,10 +162,16 @@ def ChooseList(widget,table):
     listWindow.iconbitmap(os.path.dirname(__file__)+"/Images/ship.ico")
     listWindow.title('AtoZ Invoice')
     listWindow.geometry('%dx%d+%d+%d' % (600, 200, (addWindow.winfo_screenwidth()/2)-300, (addWindow.winfo_screenheight()/2)-100))
-    SearchBar(listWindow,table,1)
-    if widget==name: columns = (' ID',' Number',' Име',' Телефон',' Имейл')
-    elif widget==position: columns = (' ID',' Длъжност',' Ранг',' Департамент')
-    else: columns = (' ID',' Кораб')
+    
+    if widget==nameE: 
+        columns = (' ID',' Number',' Име',' Телефон',' Имейл')
+        SearchBar(listWindow,table,1,addPerson,columns)
+    elif widget==positionE: 
+        columns = (' ID',' Длъжност',' Ранг',' Департамент')
+        SearchBar(listWindow,table,1,addPosition,columns)
+    else: 
+        columns = (' ID',' Кораб')
+        SearchBar(listWindow,table,1,addVessel,columns)
     ShowData(listWindow,table,columns,1)
     trv.bind('<Double-1>', lambda e: onDoubleClick(table))
     sEntry.bind('<Return>', lambda e: onDoubleClick(table))
@@ -175,15 +181,15 @@ def editContract():
     if len(item['values'])==0: return
     addContractData(item)
     varT.set(item['values'][4])
-    name.delete(0,END)
-    name.insert(0,item['values'][1])
-    name.unbind('<FocusIn>')
-    position.delete(0,END)
-    position.insert(0,item['values'][2])
-    position.unbind('<FocusIn>')
-    vessel.delete(0,END)
-    vessel.insert(0,item['values'][6])
-    vessel.unbind('<FocusIn>')
+    nameE.delete(0,END)
+    nameE.insert(0,item['values'][1])
+    nameE.unbind('<FocusIn>')
+    positionE.delete(0,END)
+    positionE.insert(0,item['values'][2])
+    positionE.unbind('<FocusIn>')
+    vesselE.delete(0,END)
+    vesselE.insert(0,item['values'][6])
+    vesselE.unbind('<FocusIn>')
     dateOn.delete(0,END)
     dateOn.insert(0,item['values'][7])
     dateOff.delete(0,END)
@@ -218,7 +224,7 @@ def addContractData(k):
     addWindow.iconbitmap(os.path.dirname(__file__)+"/Images/ship.ico")
     image = Image.open(os.path.dirname(__file__)+'/Images/browse.png')
     img = ctk.CTkImage(light_image=image.resize((15, 15)))
-    global name,position,rating,vessel,department,cadet,typeCrew,dateOn,dateOff,medical,change,typeContract
+    global nameE,positionE,rating,vesselE,department,cadet,typeCrew,dateOn,dateOff,medical,change,typeContract
     
     global varT,varC,varTP
     varTP=ctk.StringVar(value='general')
@@ -230,20 +236,20 @@ def addContractData(k):
     typeContract = ctk.CTkOptionMenu(addWindow,values=['temporary', 'permament'],variable=varT).place(relwidth = 0.25, relheight = 0.04,relx=0.23,rely=0.2)
     typeL = ctk.CTkLabel(addWindow,text='Tип',bg_color='#363c45',anchor=W).place(relwidth = 0.05, relheight = 0.03,relx=0.05,rely=0.20)
     nameL = ctk.CTkLabel(addWindow,text='Име',bg_color='#363c45',anchor=W).place(relwidth = 0.051, relheight = 0.03,relx=0.05,rely=0.28)
-    name = ctk.CTkEntry(addWindow)
-    name.place(relwidth = 0.25, relheight = 0.06,relx=0.23,rely=0.28)
-    name.bind('<FocusIn>',lambda e:ChooseList(name,'personalDetails'))
-    addName = ctk.CTkButton(addWindow,image=img,text='',fg_color='#363c45', bg_color='#363c45',hover_color='#363c45',command=lambda:ChooseList(name,'personalDetails'),height=10*kH,width=10*kW).place(relwidth = 0.04, relheight = 0.08,relx=0.50,rely=0.276)
+    nameE = ctk.CTkEntry(addWindow)
+    nameE.place(relwidth = 0.25, relheight = 0.06,relx=0.23,rely=0.28)
+    nameE.bind('<FocusIn>',lambda e:ChooseList(nameE,'personalDetails'))
+    addName = ctk.CTkButton(addWindow,image=img,text='',fg_color='#363c45', bg_color='#363c45',hover_color='#363c45',command=lambda:ChooseList(nameE,'personalDetails'),height=10*kH,width=10*kW).place(relwidth = 0.04, relheight = 0.08,relx=0.50,rely=0.276)
     positionL= ctk.CTkLabel(addWindow,text='Позиция',bg_color='#363c45',anchor=W).place(relwidth = 0.1, relheight = 0.03,relx=0.05,rely=0.38)
-    position = ctk.CTkEntry(addWindow)
-    position.place(relwidth = 0.25, relheight = 0.06,relx=0.23,rely=0.37)
-    position.bind('<FocusIn>',lambda e:ChooseList(position,'positions'))
-    addPosition = ctk.CTkButton(addWindow,image=img,text='',fg_color='#363c45', bg_color='#363c45',hover_color='#363c45',command=lambda:ChooseList(position,'positions'),height=10*kH,width=10*kW).place(relwidth = 0.04, relheight = 0.08,relx=0.50,rely=0.366)
+    positionE = ctk.CTkEntry(addWindow)
+    positionE.place(relwidth = 0.25, relheight = 0.06,relx=0.23,rely=0.37)
+    positionE.bind('<FocusIn>',lambda e:ChooseList(positionE,'positions'))
+    addPosition = ctk.CTkButton(addWindow,image=img,text='',fg_color='#363c45', bg_color='#363c45',hover_color='#363c45',command=lambda:ChooseList(positionE,'positions'),height=10*kH,width=10*kW).place(relwidth = 0.04, relheight = 0.08,relx=0.50,rely=0.366)
     vesselL = ctk.CTkLabel(addWindow,text='Кораб',bg_color='#363c45',anchor=W).place(relwidth = 0.051, relheight = 0.03,relx=0.05,rely=0.47)
-    vessel = ctk.CTkEntry(addWindow)
-    vessel.place(relwidth = 0.25, relheight = 0.06,relx=0.23,rely=0.46)
-    vessel.bind('<FocusIn>',lambda e:ChooseList(vessel,'vessels'))
-    addVessel =ctk.CTkButton(addWindow,text='',image=img,fg_color='#363c45', bg_color='#363c45',hover_color='#363c45',command=lambda:ChooseList(vessel,'vessels'),height=10*kH,width=10*kW).place(relwidth = 0.04, relheight = 0.08,relx=0.50,rely=0.456)
+    vesselE = ctk.CTkEntry(addWindow)
+    vesselE.place(relwidth = 0.25, relheight = 0.06,relx=0.23,rely=0.46)
+    vesselE.bind('<FocusIn>',lambda e:ChooseList(vesselE,'vessels'))
+    addVessel =ctk.CTkButton(addWindow,text='',image=img,fg_color='#363c45', bg_color='#363c45',hover_color='#363c45',command=lambda:ChooseList(vesselE,'vessels'),height=10*kH,width=10*kW).place(relwidth = 0.04, relheight = 0.08,relx=0.50,rely=0.456)
     varC = IntVar(value=0)
     cadetL = ctk.CTkLabel(addWindow,text='Кадет',bg_color='#363c45',anchor=W).place(relwidth = 0.09, relheight = 0.03,relx=0.05,rely=0.56)
     cadet = ctk.CTkCheckBox(addWindow,text='',bg_color='#363c45',variable=varC).place(relwidth = 0.25, relheight = 0.06,relx=0.23,rely=0.55)
@@ -278,7 +284,7 @@ def addContractData(k):
     addWindow.bind('<Escape>',lambda e:addWindow.destroy())
 
 def addContractInfo():
-    if varT.get()=='' or name.get=='' or vessel.get=='' or position.get=='':
+    if varT.get()=='' or nameE.get=='' or vesselE.get=='' or positionE.get=='':
         return
     conn = sqlite3.connect(pathGlobal+'/data.db')
     c = conn.cursor()
@@ -406,15 +412,20 @@ def deleteRow(table):
         defaultData(table)
         # if(trv)   
 
-def SearchBar(window,table,t):
+def SearchBar(window,table,t,func,columns):
     searchBar = ctk.CTkFrame(window,bg_color='#242930', fg_color='#242930', border_width=0,height=40*kW)
     searchBar.pack(fill='both', expand='no')
     image = Image.open(os.path.dirname(__file__)+'/Images/search.png')
     img = ctk.CTkImage(light_image=image)
     searchIcon = ctk.CTkLabel(searchBar,image=img,text="").place(relx=0.01,rely=0.18)
     global sEntry
+    image = Image.open(os.path.dirname(__file__)+'/Images/browse.png')
+    img = ctk.CTkImage(light_image=image.resize((15, 15)))
     sEntry = ctk.CTkEntry(searchBar,font=('Arial', 12),fg_color='white',text_color='#242930')
-    if t==1:sEntry.place(relwidth = 0.15, relheight = 0.8,relx=0.05,rely=0.2)
+    if t==1:
+        sEntry.place(relwidth = 0.15, relheight = 0.8,relx=0.05,rely=0.2)
+        aButton = ctk.CTkButton(searchBar,image=img,text='',bg_color='#242930', fg_color='#242930',hover_color='#242930',command=lambda: [func(0),ShowData(window,table,columns,1),trv.bind('<Double-1>', lambda e: onDoubleClick(table)),sEntry.bind('<Return>', lambda e: onDoubleClick(table))],height=10*kH,width=10*kW)
+        aButton.place(relx=0.2,rely=0.18)
     else: sEntry.place(relwidth = 0.15, relheight = 0.8,relx=0.03,rely=0.2)
     sEntry.after(0,sEntry.focus_force)
     sEntry.bind('<KeyRelease>',lambda e: searchData(e,table))
@@ -469,8 +480,9 @@ def editPerson():
     phone.insert(0,item['values'][3])
     mail.delete(0,END)
     mail.insert(0,item['values'][4])
-    update =ctk.CTkButton(dataAdd, text='Обнови',command=lambda:[updatePersonData(item['values'][0]),update.place_forget(),eButton.place(relwidth = 0.045, relheight = 0.135,relx=0.226,rely=0.86),crewID.delete(0,END),name.delete(0,END),phone.delete(0,END),mail.delete(0,END)])
-    update.place(relwidth = 0.037, relheight = 0.135,relx=0.226,rely=0.86)
+    global uButton
+    uButton =ctk.CTkButton(dataAdd, text='Обнови',command=lambda:[updatePersonData(item['values'][0]),uButton.place_forget(),eButton.place(relwidth = 0.045, relheight = 0.135,relx=0.226,rely=0.86),crewID.delete(0,END),name.delete(0,END),phone.delete(0,END),mail.delete(0,END)])
+    uButton.place(relwidth = 0.037, relheight = 0.135,relx=0.226,rely=0.86)
 
 def updatePersonData(k):
     conn = sqlite3.connect(pathGlobal+'/data.db')
@@ -480,13 +492,13 @@ def updatePersonData(k):
     conn.close()
     defaultData('personalDetails')
 
-def addPerson():
+def addPerson(flag):
     # Example(root).pack(fill='both', expand=True)
     personAddW = ctk.CTkToplevel(root)
     personAddW.grab_set()
-    personAddW.protocol("WM_DELETE_WINDOW",  root.destroy)
+    if flag==1: personAddW.protocol("WM_DELETE_WINDOW",  lambda: [personAddW.destroy(),root.after(0, lambda:root.state('zoomed')),root.after(1, lambda:root.deiconify())])
     NewWindow(personAddW) #Window style
-    SearchBar(personAddW,'personalDetails',0) #Search
+    SearchBar(personAddW,'personalDetails',0,0,0) #Search
     columns = (' ID',' Number',' Име',' Телефон',' Имейл') # Show data
     ShowData(personAddW,'personalDetails',columns,0)
     trv.bind('<Double-1>',lambda e:[ eButton.place_forget(),editPerson()])
@@ -508,12 +520,15 @@ def addPerson():
     mail.place(relwidth = 0.17, relheight = 0.13,relx=0.1,rely=0.7)
     mailL =ctk.CTkLabel(dataAdd,text='Имейл:',text_color='white').place(relwidth = 0.03, relheight = 0.13,relx=0.05,rely=0.7)
     Ivan = ctk.CTkOptionMenu(dataAdd)
-    addButton =ctk.CTkButton(dataAdd, text='Добави',command=lambda: [addPersonData(),crewID.delete(0,END),name.delete(0,END),phone.delete(0,END),mail.delete(0,END)],fg_color="green",hover_color="darkgreen").place(relwidth = 0.037, relheight = 0.135,relx=0.1,rely=0.86)
-    dButton =ctk.CTkButton(dataAdd,text='Изтрий', command=lambda: deleteRow('personalDetails'),fg_color="red",hover_color="darkred").place(relwidth = 0.037, relheight = 0.135,relx=0.142,rely=0.86)
-    cButton = ctk.CTkButton(dataAdd,text='Изчисти', command=lambda: [crewID.delete(0,END),name.delete(0,END),phone.delete(0,END),mail.delete(0,END)]).place(relwidth = 0.037, relheight = 0.135,relx=0.184,rely=0.86)
-    windowBack =ctk.CTkButton(personAddW,text='Back', command=lambda: [personAddW.destroy(),root.after(0, lambda:root.state('zoomed')),root.after(1, lambda:root.deiconify())]).place(relwidth = 0.15, relheight = 0.06,relx=0.40,rely=0.9)
-    eButton = ctk.CTkButton(dataAdd, text='Редактирай',command=lambda: [ eButton.place_forget(),editPerson()])
-    eButton.place(relwidth = 0.045, relheight = 0.135,relx=0.226,rely=0.86)
+    addButton =ctk.CTkButton(dataAdd, text='Добави',command=lambda: [addPersonData(),crewID.delete(0,END),name.delete(0,END),phone.delete(0,END),mail.delete(0,END),ShowData(personAddW,'personalDetails',columns,0)],fg_color="green",hover_color="darkgreen").place(relwidth = 0.037, relheight = 0.135,relx=0.1,rely=0.86)
+    if flag==1:
+        dButton =ctk.CTkButton(dataAdd,text='Изтрий', command=lambda: deleteRow('personalDetails'),fg_color="red",hover_color="darkred").place(relwidth = 0.037, relheight = 0.135,relx=0.142,rely=0.86)
+        cButton = ctk.CTkButton(dataAdd,text='Изчисти', command=lambda: [crewID.delete(0,END),name.delete(0,END),phone.delete(0,END),mail.delete(0,END),eButton.place(relwidth = 0.045, relheight = 0.135,relx=0.226,rely=0.86),uButton.place_forget()]).place(relwidth = 0.037, relheight = 0.135,relx=0.184,rely=0.86)
+        eButton = ctk.CTkButton(dataAdd, text='Редактирай',command=lambda: [ eButton.place_forget(),editPerson()])
+        eButton.place(relwidth = 0.045, relheight = 0.135,relx=0.226,rely=0.86)
+    if flag==1: windowBack =ctk.CTkButton(personAddW,text='Back', command=lambda: [personAddW.destroy(),root.after(0, lambda:root.state('zoomed')),root.after(1, lambda:root.deiconify())]).place(relwidth = 0.15, relheight = 0.06,relx=0.40,rely=0.9)
+    else: windowBack =ctk.CTkButton(personAddW,text='Back', command=lambda: [personAddW.destroy()]).place(relwidth = 0.15, relheight = 0.06,relx=0.40,rely=0.9)
+    
 
 def addContract():
     global contractAddW
@@ -545,8 +560,9 @@ def editVessel():
     name.insert(0,item['values'][1])
     company.delete(0,END)
     company.insert(0,item['values'][2])
-    update =ctk.CTkButton(dataAdd, text='Обнови',command=lambda:[updateVesselData(item['values'][0]),update.place_forget(),eButton.place(relwidth = 0.045, relheight = 0.135,relx=0.226,rely=0.63),name.delete(0,END),company.delete(0,END)],width=50*kW)
-    update.place(relwidth = 0.037, relheight = 0.135,relx=0.226,rely=0.63)
+    global uButton
+    uButton = ctk.CTkButton(dataAdd, text='Обнови',command=lambda:[updateVesselData(item['values'][0]),uButton.place_forget(),eButton.place(relwidth = 0.045, relheight = 0.135,relx=0.226,rely=0.63),name.delete(0,END),company.delete(0,END)],width=50*kW)
+    uButton.place(relwidth = 0.037, relheight = 0.135,relx=0.226,rely=0.63)
 
 def updateVesselData(k):
     conn = sqlite3.connect(pathGlobal+'/data.db')
@@ -556,13 +572,13 @@ def updateVesselData(k):
     conn.close()
     defaultData('vessels')
 
-def addVessel(): 
+def addVessel(flag): 
     global vesselAddW
     vesselAddW = ctk.CTkToplevel(root)
     vesselAddW.grab_set()
-    vesselAddW.protocol("WM_DELETE_WINDOW",  root.destroy)
+    if flag==1: vesselAddW.protocol("WM_DELETE_WINDOW",  lambda: [vesselAddW.destroy(),root.after(0, lambda:root.state('zoomed')),root.after(1, lambda:root.deiconify())])
     NewWindow(vesselAddW) # Window style
-    SearchBar(vesselAddW,'vessels',0) # Search
+    SearchBar(vesselAddW,'vessels',0,0,0) # Search
     columns = (' ID',' Кораб','Компания') # Show data
     ShowData(vesselAddW,'vessels',columns,0)
     trv.bind('<Double-1>',lambda e:[eButton.place_forget(),editVessel()])
@@ -580,12 +596,15 @@ def addVessel():
     companyL = ctk.CTkLabel(dataAdd,text='Компания:',text_color='white').place(relwidth = 0.05, relheight = 0.1,relx=0.02,rely=0.42)
     Ivan = ctk.CTkOptionMenu(dataAdd)
 
-    addButton =ctk.CTkButton(dataAdd, text='Добави',command=lambda: [addVesselData(),name.delete(0,END),company.delete(0,END)],fg_color="green",hover_color="darkgreen").place(relwidth = 0.037, relheight = 0.135,relx=0.1,rely=0.63)
-    dButton =ctk.CTkButton(dataAdd,text='Изтрий', command=lambda: deleteRow('vessels'),fg_color="red",hover_color="darkred").place(relwidth = 0.037, relheight = 0.135,relx=0.142,rely=0.63)
-    cButton = ctk.CTkButton(dataAdd,text='Изчисти', command=lambda: [name.delete(0,END),company.delete(0,END)]).place(relwidth = 0.037, relheight = 0.135,relx=0.184,rely=0.63)
-    windowBack =ctk.CTkButton(vesselAddW,text='Back', command=lambda: [vesselAddW.destroy(),root.after(0, lambda:root.state('zoomed')),root.after(1, lambda:root.deiconify())]).place(relwidth = 0.15, relheight = 0.06,relx=0.40,rely=0.9)
-    eButton = ctk.CTkButton(dataAdd, text='Редактирай',command=lambda: [ eButton.place_forget(),editVessel()])
-    eButton.place(relwidth = 0.045, relheight = 0.135,relx=0.226,rely=0.63)
+    if flag==1:
+        addButton =ctk.CTkButton(dataAdd, text='Добави',command=lambda: [addVesselData(),name.delete(0,END),company.delete(0,END),ShowData(vesselAddW,'vessels',columns,0)],fg_color="green",hover_color="darkgreen").place(relwidth = 0.037, relheight = 0.135,relx=0.1,rely=0.63)
+        dButton =ctk.CTkButton(dataAdd,text='Изтрий', command=lambda: deleteRow('vessels'),fg_color="red",hover_color="darkred").place(relwidth = 0.037, relheight = 0.135,relx=0.142,rely=0.63)
+        cButton = ctk.CTkButton(dataAdd,text='Изчисти', command=lambda: [name.delete(0,END),company.delete(0,END),eButton.place(relwidth = 0.045, relheight = 0.135,relx=0.226,rely=0.63),uButton.place_forget()]).place(relwidth = 0.037, relheight = 0.135,relx=0.184,rely=0.63)
+        eButton = ctk.CTkButton(dataAdd, text='Редактирай',command=lambda: [ eButton.place_forget(),editVessel()])
+        eButton.place(relwidth = 0.045, relheight = 0.135,relx=0.226,rely=0.63)
+    if flag==1:windowBack =ctk.CTkButton(vesselAddW,text='Back', command=lambda: [vesselAddW.destroy(),root.after(0, lambda:root.state('zoomed')),root.after(1, lambda:root.deiconify())]).place(relwidth = 0.15, relheight = 0.06,relx=0.40,rely=0.9)
+    else: windowBack =ctk.CTkButton(vesselAddW,text='Back', command=lambda: [vesselAddW.destroy()]).place(relwidth = 0.15, relheight = 0.06,relx=0.40,rely=0.9)
+    
 
 def editPosition():
     item = trv.item(trv.focus())
@@ -596,8 +615,9 @@ def editPosition():
     position.insert(0,item['values'][1])
     varR.set(item['values'][2])
     varTC.set(item['values'][3])
-    update =ctk.CTkButton(dataAdd, text='Обнови',command=lambda:[updatePositionData(item['values'][0]),position.delete(0,END),varR.set(""),varTC.set(""),eButton.place(relwidth = 0.045, relheight = 0.13,relx=0.226,rely=0.86),update.place_forget()])
-    update.place(relwidth = 0.0357, relheight = 0.13,relx=0.226,rely=0.86)
+    global uButton
+    uButton =ctk.CTkButton(dataAdd, text='Обнови',command=lambda:[updatePositionData(item['values'][0]),position.delete(0,END),varR.set(""),varTC.set(""),eButton.place(relwidth = 0.045, relheight = 0.13,relx=0.226,rely=0.86),uButton.place_forget()])
+    uButton.place(relwidth = 0.0357, relheight = 0.13,relx=0.226,rely=0.86)
 
 def updatePositionData(k):
     conn = sqlite3.connect(pathGlobal+'/data.db')
@@ -607,14 +627,14 @@ def updatePositionData(k):
     conn.close()
     defaultData('positions')
 
-def addPosition():
+def addPosition(flag):
     # Example(root).pack(fill='both', expand=True)
     global positionAddW
     positionAddW = ctk.CTkToplevel(root)
     positionAddW.grab_set()
-    positionAddW.protocol("WM_DELETE_WINDOW",  root.destroy)
+    if flag==1:positionAddW.protocol("WM_DELETE_WINDOW", lambda: [positionAddW.destroy(),root.after(0, lambda:root.state('zoomed')),root.after(1, lambda:root.deiconify())])
     NewWindow(positionAddW) #Window style
-    SearchBar(positionAddW,'positions',0) #Search
+    SearchBar(positionAddW,'positions',0,0,0) #Search
     columns = (' ID',' Длъжност',' Ранг',' Департамент') # Show data
     ShowData(positionAddW,'positions',columns,0)
     trv.bind('<Double-1>',lambda e:[ eButton.place_forget(),editPosition()])
@@ -638,12 +658,15 @@ def addPosition():
     typeCrewL = ctk.CTkLabel(dataAdd,text='Департамент:',anchor=W).place(relwidth = 0.08, relheight = 0.1,relx=0.02,rely=0.65)
     typeCrew = ctk.CTkOptionMenu(dataAdd,values=['Deck and Engine','Hotel'],variable=varTC).place(relwidth = 0.168, relheight = 0.13,relx=0.1,rely=0.63)
 
-    addButton =ctk.CTkButton(dataAdd, text='Добави',command=lambda: [addPositionData(),position.delete(0,END),varR.set(""),varTC.set("")],fg_color="green",hover_color="darkgreen").place(relwidth = 0.037, relheight = 0.135,relx=0.1,rely=0.86)
-    dButton  =ctk.CTkButton(dataAdd,text='Изтрий', command=lambda: deleteRow('positions'),fg_color="red",hover_color="darkred").place(relwidth = 0.037, relheight = 0.135,relx=0.142,rely=0.86)
-    cButton = ctk.CTkButton(dataAdd,text='Изчисти', command=lambda: [position.delete(0,END),varR.set(""),varTC.set("")]).place(relwidth = 0.037, relheight = 0.135,relx=0.184,rely=0.86)
-    windowBack =ctk.CTkButton(positionAddW,text='Back', command=lambda: [positionAddW.destroy(),root.after(0, lambda:root.state('zoomed')),root.after(1, lambda:root.deiconify())]).place(relwidth = 0.15, relheight = 0.06,relx=0.40,rely=0.9)
-    eButton = ctk.CTkButton(dataAdd, text='Редактирай',command=lambda: [ eButton.place_forget(),editPosition()])
-    eButton.place(relwidth = 0.045, relheight = 0.13,relx=0.226,rely=0.86)
+    addButton =ctk.CTkButton(dataAdd, text='Добави',command=lambda: [addPositionData(),position.delete(0,END),varR.set(""),varTC.set(""), ShowData(positionAddW,'positions',columns,0)],fg_color="green",hover_color="darkgreen").place(relwidth = 0.037, relheight = 0.135,relx=0.1,rely=0.86)
+    if flag==1:
+        dButton  =ctk.CTkButton(dataAdd,text='Изтрий', command=lambda: deleteRow('positions'),fg_color="red",hover_color="darkred").place(relwidth = 0.037, relheight = 0.135,relx=0.142,rely=0.86)
+        cButton = ctk.CTkButton(dataAdd,text='Изчисти', command=lambda: [position.delete(0,END),varR.set(""),varTC.set(""),eButton.place(relwidth = 0.045, relheight = 0.13,relx=0.226,rely=0.86),uButton.place_forget()]).place(relwidth = 0.037, relheight = 0.135,relx=0.184,rely=0.86)
+        eButton = ctk.CTkButton(dataAdd, text='Редактирай',command=lambda: [ eButton.place_forget(),editPosition()])
+        eButton.place(relwidth = 0.045, relheight = 0.13,relx=0.226,rely=0.86)
+    if flag==1:windowBack =ctk.CTkButton(positionAddW,text='Back', command=lambda: [positionAddW.destroy(),root.after(0, lambda:root.state('zoomed')),root.after(1, lambda:root.deiconify())]).place(relwidth = 0.15, relheight = 0.06,relx=0.40,rely=0.9)
+    else: windowBack =ctk.CTkButton(positionAddW,text='Back', command=lambda: [positionAddW.destroy()]).place(relwidth = 0.15, relheight = 0.06,relx=0.40,rely=0.9)
+    
 
 def browse_button():
     config = configparser.ConfigParser()
@@ -965,16 +988,17 @@ print(os.path.dirname(__file__)+'/config.txt')
 monthK = {'January': 1, 'February': 2, 'March': 3, 'April': 4, 'May': 5, 'June': 6, 'July': 7, 'August': 8, 'September': 9, 'October': 10, 'November': 11, 'December': 12}
 monthN = {'January': 'Януари', 'February': 'Февруари', 'March': 'Март', 'April': 'Април', 'May': 'Май', 'June': 'Юни', 'July': 'Юли', 'August': 'Август', 'September': 'Септември', 'October': 'Октомври', 'November': 'Ноември', 'December': 'Декември'}
 today = datetime.now()
-personAdd =ctk.CTkButton(root,text='Добавяне на човек',font=('Arial',17),border_width=2,border_color='#242930',command=addPerson)
+personAdd =ctk.CTkButton(root,text='Добавяне на човек',font=('Arial',17),border_width=2,border_color='#242930',command=lambda: addPerson(1))
 personAdd.place(relwidth = 0.25, relheight = 0.06,relx=0.07,rely=0.22)
 contractAdd =ctk.CTkButton(root,text='Добавяне на договор',font=('Arial',17),border_width=2,border_color='#242930',command=addContract).place(relwidth = 0.25, relheight = 0.06,relx=0.07,rely=0.29)
-vesselAdd =ctk.CTkButton(root,text='Добавяне на кораб',font=('Arial',17),border_width=2,border_color='#242930',command=addVessel).place(relwidth = 0.25, relheight = 0.06,relx=0.07,rely=0.36)
-positionAdd = ctk.CTkButton(root,text='Добавяне на позиция',font=('Arial',17),border_width=2,border_color='#242930',command=addPosition).place(relwidth = 0.25, relheight = 0.06,relx=0.07,rely=0.43)
+vesselAdd =ctk.CTkButton(root,text='Добавяне на кораб',font=('Arial',17),border_width=2,border_color='#242930',command=lambda: addVessel(1)).place(relwidth = 0.25, relheight = 0.06,relx=0.07,rely=0.36)
+positionAdd = ctk.CTkButton(root,text='Добавяне на позиция',font=('Arial',17),border_width=2,border_color='#242930',command=lambda: addPosition(1)).place(relwidth = 0.25, relheight = 0.06,relx=0.07,rely=0.43)
 apendixMake = ctk.CTkButton(root,text='Справки',font=('Arial',17),border_width=2,border_color='#242930',command=createApendix).place(relwidth = 0.25, relheight = 0.06,relx=0.07,rely=0.50)
 image = PhotoImage(file=os.path.dirname(__file__)+'/Images/settings.png')
 image=image.subsample(8,8)
 settings = ctk.CTkButton(root,image=image,text='',fg_color='#242930',hover_color='#242930',command=setting).place(relx=0,rely=0.9)
 windowExit = ctk.CTkButton(root,text='Exit', command=root.quit).place(relwidth = 0.15, relheight = 0.06,relx=0.40,rely=0.9)
+
 
 # conn = sqlite3.connect(pathGlobal+'/data.db')
 # for i inprint(kW,kH)
