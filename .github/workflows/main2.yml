@@ -10,4 +10,4 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Run code
-        run: .\Python_Code\Builder.bat
+        run: ./Python_Code/Builder.bat
