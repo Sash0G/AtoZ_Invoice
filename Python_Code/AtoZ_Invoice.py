@@ -965,7 +965,7 @@ def callback_select_all(event):
 	root.after(50, lambda:event.widget.select_range(0, 'end'))
 
 root = ctk.CTk()
-#root.iconbitmap("./Images/ship.ico")
+root.iconbitmap(os.path.dirname(__file__)+"./Images/ship.ico")
 root.title('AtoZ Invoice')
 config = configparser.ConfigParser()
 #config.read(r'config.txt')
