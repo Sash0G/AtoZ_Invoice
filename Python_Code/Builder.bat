@@ -10,4 +10,5 @@ set "YYYY=%dt:~0,4%" & set "MM=%dt:~4,2%" & set "DD=%dt:~6,2%"
 rename .\dist\AtoZ_Invoice AtoZ_Invoice_%DD%.%MM%.%YYYY%
 move .\dist\AtoZ_Invoice_%DD%.%MM%.%YYYY% .\..\Releases
 RMDIR /S /Q .\dist
+@echo zdr 123
 pause
