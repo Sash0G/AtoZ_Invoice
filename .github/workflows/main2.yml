@@ -23,7 +23,7 @@ jobs:
         pip install pillow==10.1.0
         pip install xlsxtpl
         pip install openpyxl==3.0.9
-        xltpl==0.19
+        pip install xltpl==0.19
         pip install wheel==0.41.2
         
     - name: Build executable
