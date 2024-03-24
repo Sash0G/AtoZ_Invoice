@@ -1,6 +1,9 @@
 name: PyInstaller Build
 
-on: [push]
+on:
+  push:
+    paths:
+      - 'AtoZ_Invoice.py'
 
 jobs:
   build:
