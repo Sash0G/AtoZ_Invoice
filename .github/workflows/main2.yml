@@ -76,5 +76,5 @@ jobs:
       with:
         upload_url: '${{ steps.create-release.outputs.upload_url }}'
         asset_path: ./AtoZ_Invoice.zip
-        asset_name: AtoZ_Invoice-$${{ github.event.head_commit.message }}.zip
+        asset_name: AtoZ_Invoice-${{ github.event.head_commit.message }}.zip
         asset_content_type: application/zip
