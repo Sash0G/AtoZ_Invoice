@@ -12,6 +12,10 @@ jobs:
     - name: Install dependencies
       run: |
         pip install customtkinter
+        pip isntall pyinstaller
+        pip isntall pywin32
+        pip install numpy
+        pip install pillow
         
     - name: Build executable
       run: |
