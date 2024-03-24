@@ -10,10 +10,6 @@ jobs:
       run: |
         pip install pyinstaller
         
-    - name: Add PyInstaller to PATH
-      run: |
-        echo "::add-path::$(python -m site --user-base)/bin"
-        
     - name: Build executable
       run: |
         pyinstaller --windowed --hidden-import=tkinter --hidden-import=tkinter.filedialog --hidden-import=tkinter.font --hidden-import=distutils --hidden-import=customtkinter --icon=./Python_Code/Images/ship.ico ./Python_Code/AtoZ_Invoice.py
