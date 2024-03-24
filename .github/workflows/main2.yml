@@ -35,22 +35,20 @@ jobs:
         xcopy .\Python_Code\template.xlsx     .\dist\AtoZ_Invoice\_internal
         
     - name: Signing
-      uses: skymatic/code-sign-action@v1
+      uses: markeytos/code-sign-action@v1
       with:
-        certificate: '${{ secrets.CERTIFICATE }}'
-        password: '${{ secrets.PASSWORD }}'
-        certificatesha1: '${{ secrets.CERTHASH }}'
-        certificatename: '${{ secrets.CERTNAME }}'
-        description: 'My App'
+        certificate: ./Python_code/Certificate.pfx
+        password: '${{ secrets.CERTPASS }}'
+        certificatesha1: '${{ secrets.HASH }}'
         timestampUrl: 'http://timestamp.digicert.com'
-        folder: './dist/AtoZ_Invoice/AtoZ_Invoicec'
+        folder: './dist'
         recursive: true
 
     - name: Release Executable
       uses: actions/upload-artifact@v4
       with:
           name: AtoZ_Invoice
-          path: dist/AtoZ_Invoice
+          path: dist/
   # release:
   #   name: Release project
   #   runs-on: ubuntu-latest
