@@ -71,7 +71,6 @@ jobs:
         release_name: Release '${{ github.run_number }}'
     - name: Upload release
       uses: softprops/action-gh-release@v2
-      if: startsWith(github.ref, 'refs/tags/')
       with:
         files: |
           ./AtoZ_Invoice.zip
