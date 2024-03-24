@@ -16,6 +16,7 @@ jobs:
         pip install pywin32
         pip install numpy
         pip install pillow
+        pip install xlsxtpl
         
     - name: Build executable
       run: |
