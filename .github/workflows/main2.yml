@@ -17,8 +17,5 @@ jobs:
       - name: Install PyInstaller
         run: pip install pyinstaller
     
-      - name: Run Python Script
-        run: python script.py
-    
       - name: Create Executable
-        run: pyinstaller --onefile script.py
+        run: pyinstaller --onefile ./Python_Code/AtoZ_Invoice.py
