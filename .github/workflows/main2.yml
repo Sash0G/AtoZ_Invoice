@@ -20,4 +20,4 @@ jobs:
       - name: Run Batch File
         shell: cmd
         run: |
-          call Builder.bat
+          call ./Python_Code/Builder.bat
