@@ -1,14 +1,35 @@
-name: Run Builder Batch File
+name: PyInstaller Build
+
 on: [push]
 
 jobs:
-  run_batch_file:
+  build:
     runs-on: windows-latest
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
-    
-    - name: Run Builder Batch File
-      shell: cmd
+      
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.12.0'
+        
+    - name: Install dependencies
       run: |
-        call ./Python_Code/Builder.bat
+        pip install customtkinter
+        pip install pyinstaller==6.1.0
+        pip install pywin32
+        pip install numpy
+        pip install pillow==10.1.0
+        pip install xlsxtpl
+        pip install Jinja2==3.1.2
+        pip install wheel==0.41.2
+        
+    - name: Build executable
+      run: |
+        pyinstaller --windowed --hidden-import=tkinter --hidden-import=tkinter.filedialog --hidden-import=tkinter.font --hidden-import=distutils --hidden-import=customtkinter --icon=./Python_Code/Images/ship.ico ./Python_Code/AtoZ_Invoice.py
+    - name: Release Executable
+      uses: actions/upload-artifact@v2
+      with:
+          name: my-executable
+          path: dist/
