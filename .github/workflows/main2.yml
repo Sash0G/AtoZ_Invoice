@@ -1,23 +1,24 @@
-name: PyInstaller Build
+name: Run Python Script and Create Executable
 
-on: [push]
+# Specify the environment where the script will run
 
+on:
+  push:
+    branches:
+      - main  # You can change this to your main branch name
+env:
+  python_version: 3.12.2
+# Define the jobs to execute upon push
 jobs:
-  build:
-    runs-on: windows-latest
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
-    - name: Install dependencies
-      run: |
-        pip install pyinstaller
-        
-    - name: Add PyInstaller to PATH
-      run: |
-        echo "::add-path::$(python -m site --user-base)/bin"
-        
-    - name: Build executable
-      run: |
-        py -m PyInstaller --windowed --hidden-import=tkinter --hidden-import=tkinter.filedialog --hidden-import=tkinter.font --hidden-import=distutils --hidden-import=customtkinter --icon=./Python_Code/Images/ship.ico ./Python_Code/AtoZ_Invoice.py
+    build:
+      runs-on: ubuntu-latest
+  # Define the steps to execute
+      steps:
+      - name: Install PyInstaller
+        run: pip install pyinstaller
+    
+      - name: Run Python Script
+        run: python script.py
+    
+      - name: Create Executable
+        run: pyinstaller --onefile script.py
