@@ -1,4 +1,5 @@
 @echo off
+pip install pyinstaller
 py -m PyInstaller --windowed --hidden-import=tkinter --hidden-import=tkinter.filedialog --hidden-import=tkinter.font --hidden-import=distutils --hidden-import=customtkinter --icon=Images/ship.ico ./AtoZ_Invoice.py
 xcopy /s /i .\Images     .\dist\AtoZ_Invoice\_internal\Images
 xcopy .\config.txt     .\dist\AtoZ_Invoice\_internal
