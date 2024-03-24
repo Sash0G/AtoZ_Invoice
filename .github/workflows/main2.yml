@@ -24,13 +24,17 @@ jobs:
         pip install xlsxtpl
         pip install openpyxl==3.0.9
         pip install xltpl==0.19
-        pip install wheel==0.41.2
+        pip install wheel
         
     - name: Build executable
       run: |
         pyinstaller --windowed --hidden-import=tkinter --hidden-import=tkinter.filedialog --hidden-import=tkinter.font --hidden-import=distutils --hidden-import=customtkinter --icon=./Python_Code/Images/ship.ico ./Python_Code/AtoZ_Invoice.py
+        xcopy /s /i .\Images     .\dist\AtoZ_Invoice\_internal\Images
+        xcopy .\config.txt     .\dist\AtoZ_Invoice\_internal
+        xcopy .\data.db     .\dist\AtoZ_Invoice\_internal
+        xcopy .\template.xlsx     .\dist\AtoZ_Invoice\_internal
     - name: Release Executable
       uses: actions/upload-artifact@v4
       with:
           name: my-executable
-          path: dist/AtoZ_Invoice/AtoZ_Invoice.exe
+          path: dist/
