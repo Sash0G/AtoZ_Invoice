@@ -4,7 +4,7 @@ on: [push]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
@@ -15,10 +15,10 @@ jobs:
     - name: Install dependencies
       run: |
         pip install customtkinter
-        pip install pyinstaller==6.1.0
+        pip install pyinstaller
         pip install pywin32
         pip install numpy
-        pip install pillow==10.1.0
+        pip install pillow
         pip install xlsxtpl
         pip install openpyxl==3.0.9
         pip install xltpl==0.19

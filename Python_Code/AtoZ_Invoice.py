@@ -812,15 +812,15 @@ def generateApendix():
     fname = os.path.join(path, fileName+'.xlsx')
     print(fname)
     writer.save(fname)
-    
-    # excel = client.Dispatch('Excel.Application') 
-    # sheets = excel.Workbooks.Open(path+'/'+fileName+'.xlsx') 
-    # work_sheets = sheets.Worksheets[0] 
-    # print(path)
-    # if  os.path.exists(path+'/'+fileName+'.pdf'):os.remove(path+'/' + fileName+'.pdf')
-    # work_sheets.ExportAsFixedFormat(0,path+'/'+fileName+'.pdf') 
-    # path+='/'+fileName+'.xlsx'
-    # sheets.Close(True,path)
+    writer.close()
+    excel = client.Dispatch('Excel.Application') 
+    sheets = excel.Workbooks.Open(path+'/'+fileName+'.xlsx') 
+    work_sheets = sheets.Worksheets[0] 
+    print(path)
+    if  os.path.exists(path+'/'+fileName+'.pdf'):os.remove(path+'/' + fileName+'.pdf')
+    work_sheets.ExportAsFixedFormat(0,path+'/'+fileName+'.pdf') 
+    path+='/'+fileName+'.xlsx'
+    sheets.Close(True,path)
 
 def NewSmallWindow(window):
     window.focus_force()
