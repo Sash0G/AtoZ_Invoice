@@ -20,9 +20,9 @@ jobs:
         pip install pyinstaller
         pip install pywin32
         pip install numpy
-        pip install pillow
+        pip install pillow==10.1.0
         pip install xlsxtpl
-        pip install wheel
+        pip install wheel==0.41.2
         
     - name: Build executable
       run: |
