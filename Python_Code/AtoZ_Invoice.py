@@ -813,14 +813,14 @@ def generateApendix():
     print(fname)
     writer.save(fname)
     
-    excel = client.Dispatch('Excel.Application') 
-    sheets = excel.Workbooks.Open(path+'/'+fileName+'.xlsx') 
-    work_sheets = sheets.Worksheets[0] 
-    print(path)
-    if  os.path.exists(path+'/'+fileName+'.pdf'):os.remove(path+'/' + fileName+'.pdf')
-    work_sheets.ExportAsFixedFormat(0,path+'/'+fileName+'.pdf') 
-    path+='/'+fileName+'.xlsx'
-    sheets.Close(True,path)
+    # excel = client.Dispatch('Excel.Application') 
+    # sheets = excel.Workbooks.Open(path+'/'+fileName+'.xlsx') 
+    # work_sheets = sheets.Worksheets[0] 
+    # print(path)
+    # if  os.path.exists(path+'/'+fileName+'.pdf'):os.remove(path+'/' + fileName+'.pdf')
+    # work_sheets.ExportAsFixedFormat(0,path+'/'+fileName+'.pdf') 
+    # path+='/'+fileName+'.xlsx'
+    # sheets.Close(True,path)
 
 def NewSmallWindow(window):
     window.focus_force()
@@ -924,7 +924,7 @@ def Price():
     addPriceW.grab_set()
     NewSmallWindow(addPriceW)
     columns = (' ID',' Валидно от')
-    ShowData(addPriceW,'prices',columns,2)
+    ShowData(addPriceW,'prices',columns,3,0)
     # dataShow.an="#363c45"
     dataShow.configure( bg_color='#363c45',fg_color='#363c45')
     treestyle = ttk.Style()
