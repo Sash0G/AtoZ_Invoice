@@ -1,3 +1,0 @@
-[config]
-path = D:/GitHub/AtoZ_Invoice/Releases/AtoZ_Invoice_23.03.2024
-
