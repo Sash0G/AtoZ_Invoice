@@ -1,23 +1,19 @@
-name: Run Python Batch
+name: PyInstaller Build
 
-on:
-  push:
-    branches:
-      - main  # Change this to your main branch name
+on: [push]
 
 jobs:
-  run_batch:
-    name: Run Batch
-    runs-on: windows-latest  # You can choose other OS like windows-latest for Windows environment
+  build:
+    runs-on: windows-latest
+
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-      - name: Install pyinstaller
-        run: |
-          pip install pyinstaller
+    - name: Install dependencies
+      run: |
+        pip install pyinstaller
 
-      - name: Run Batch File
-        shell: cmd
-        run: |
-          call ./Python_Code/Builder.bat
+    - name: Build executable
+      run: |
+        py -m PyInstaller --windowed --hidden-import=tkinter --hidden-import=tkinter.filedialog --hidden-import=tkinter.font --hidden-import=distutils --hidden-import=customtkinter --icon=./Python_Code/Images/ship.ico ./Python_Code/AtoZ_Invoice.py
