@@ -1,14 +1,28 @@
-name: Run Builder Batch File
-on: [push]
+name: Run Python Batch
+
+on:
+  push:
+    branches:
+      - main  # Change this to your main branch name
 
 jobs:
-  run_batch_file:
-    runs-on: windows-latest
+  run_batch:
+    name: Run Batch
+    runs-on: windows-latest  # You can choose other OS like windows-latest for Windows environment
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-    
-    - name: Run Builder Batch File
-      shell: cmd
-      run: |
-        call ./Python_Code/Builder.bat
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.12.0'  # Change this to match your Python version
+
+      - name: Install pyinstaller
+        run: |
+          pip install pyinstaller
+
+      - name: Run Batch File
+        shell: cmd
+        run: |
+          cals Builder.bat
