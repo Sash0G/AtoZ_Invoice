@@ -29,10 +29,10 @@ jobs:
     - name: Build executable
       run: |
         pyinstaller --windowed --hidden-import=tkinter --hidden-import=tkinter.filedialog --hidden-import=tkinter.font --hidden-import=distutils --hidden-import=customtkinter --icon=./Python_Code/Images/ship.ico ./Python_Code/AtoZ_Invoice.py
-        xcopy /s /i .\Images     .\dist\AtoZ_Invoice\_internal\Images
-        xcopy .\config.txt     .\dist\AtoZ_Invoice\_internal
-        xcopy .\data.db     .\dist\AtoZ_Invoice\_internal
-        xcopy .\template.xlsx     .\dist\AtoZ_Invoice\_internal
+        xcopy /s /i .\Python_Code\Images     .\dist\AtoZ_Invoice\_internal\Images
+        xcopy .\Python_Code\config.txt     .\dist\AtoZ_Invoice\_internal
+        xcopy .\Python_Code\data.db     .\dist\AtoZ_Invoice\_internal
+        xcopy .\Python_Code\template.xlsx     .\dist\AtoZ_Invoice\_internal
     - name: Release Executable
       uses: actions/upload-artifact@v4
       with:
