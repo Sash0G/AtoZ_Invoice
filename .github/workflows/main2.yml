@@ -37,7 +37,7 @@ jobs:
     - name: Signing
       uses: markeytos/code-sign-action@v1
       with:
-        certificate: ./Python_code/Certificate.pfx
+        certificate: '${{ secrets.CERTIFICATE }}'
         password: '${{ secrets.CERTPASS }}'
         certificatesha1: '${{ secrets.HASH }}'
         timestampUrl: 'http://timestamp.digicert.com'
