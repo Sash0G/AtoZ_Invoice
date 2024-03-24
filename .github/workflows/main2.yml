@@ -43,7 +43,7 @@ jobs:
         certificatename: '${{ secrets.CERTNAME }}'
         description: 'My App'
         timestampUrl: 'http://timestamp.digicert.com'
-        folder: 'files'
+        folder: './dist/AtoZ_Invoice/AtoZ_Invoicec'
         recursive: true
 
     - name: Release Executable
