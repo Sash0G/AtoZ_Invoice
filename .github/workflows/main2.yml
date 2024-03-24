@@ -69,6 +69,7 @@ jobs:
       with:
         tag_name: '${{ github.event.head_commit.message }}'
         release_name: Release_${{ github.event.head_commit.message }}
+        body: Правите папка след това отваряте windows defender->virus & threat protection -> manage settings -> add or remove exclusions и добавяте папката към изключеничта, след което разархивирате в нея.
     - name: Upload release
       uses: actions/upload-release-asset@v1
       env:
