@@ -17,6 +17,7 @@ jobs:
         pip install numpy
         pip install pillow
         pip install xlsxtpl
+        pip install wheel
         
     - name: Build executable
       run: |
