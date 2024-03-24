@@ -11,7 +11,7 @@ jobs:
       
     - name: Install dependencies
       run: |
-        pip install pyinstaller
+        pip install customtkinter
         
     - name: Build executable
       run: |
