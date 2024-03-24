@@ -70,9 +70,21 @@ jobs:
         tag_name: '${{ github.run_number }}'
         release_name: Release '${{ github.run_number }}'
     - name: Upload release
-      uses: softprops/action-gh-release@v2
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
       with:
-        files: |
-          ./AtoZ_Invoice.zip
-          ./dist/AtoZ_invoice/AtoZ_Invoice.exe
-          
+        upload_url: '${{ steps.create-release.outputs.upload_url }}'
+        asset_path: ./AtoZ_Invoice.zip
+        asset_name: AtoZ_Invoice-v$${{ github.run_number }}.zip
+        asset_content_type: application/zip
+    - name:  second release
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+      with:
+        upload_url: '${{ steps.create-release.outputs.upload_url }}'
+        asset_path: ./dist/AtoZ_Invoice/AtoZ_Invoice.exe
+        asset_name: AtoZ_Invoice-v$${{ github.run_number }}.zip
+        # asset_content_type: application
+      
