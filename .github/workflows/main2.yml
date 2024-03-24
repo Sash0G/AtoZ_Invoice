@@ -5,7 +5,6 @@ on: [push]
 jobs:
   build:
     runs-on: windows-latest
-    permissions: write-all
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
@@ -48,31 +47,34 @@ jobs:
       with:
           name: AtoZ_Invoice
           path: dist/
-
+  release:
+    name: Release project
+    permissions: write-all
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+    - name: Download artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: AtoZ_Invoice
+    - name: Archive
+      uses: thedoctor0/zip-release@master
+      with:
+        filename: AtoZ_Invoice.zip
     - name: Create GitHub release
       id: create-release
       uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
       with:
-        tag_name: '${{ github.run_number }}'
-        release_name: Release '${{ github.run_number }}'
-    # - name: Upload release
-    #   uses: actions/upload-release-asset@v1
-    #   env:
-    #     GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
-    #   with:
-    #     upload_url: '${{ steps.create-release.outputs.upload_url }}'
-    #     asset_path: ./dist
-    #     asset_name: AtoZ_Invoice-v$${{ github.run_number }}.zip
-    #     asset_content_type: application/zip
-    - name:  second release
+        tag_name: '${{ github.event.head_commit.message }}'
+        release_name: Release '${{ github.event.head_commit.message }}'
+    - name: Upload release
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
       with:
-        upload_url: '${{ steps.create-release.outputs.upload_url }}'
-        asset_path: ./dist/AtoZ_Invoice/AtoZ_Invoice.exe
-        asset_name: AtoZInvoice-v$${{ github.run_number }}.exe
+        upload_url: '${{ github.event.head_commit.message }}'
+        asset_path: ./AtoZ_Invoice.zip
+        asset_name: AtoZ_Invoice-$${{ github.event.head_commit.message }}.zip
         asset_content_type: application/zip
-      
