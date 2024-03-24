@@ -35,12 +35,10 @@ jobs:
         xcopy .\Python_Code\template.xlsx     .\dist\AtoZ_Invoice\_internal
         
     - name: Signing
-      uses: markeytos/code-sign-action@v1
+      uses: dlemstra/code-sign-action@v1
       with:
         certificate: '${{ secrets.CERTIFICATE }}'
         password: '${{ secrets.CERTPASS }}'
-        certificatesha1: '${{ secrets.HASH }}'
-        timestampUrl: 'http://timestamp.digicert.com'
         folder: './dist'
         recursive: true
 
