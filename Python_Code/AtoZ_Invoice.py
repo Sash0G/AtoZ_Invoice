@@ -812,7 +812,6 @@ def generateApendix():
     fname = os.path.join(path, fileName+'.xlsx')
     print(fname)
     writer.save(fname)
-    writer.close()
     excel = client.Dispatch('Excel.Application') 
     sheets = excel.Workbooks.Open(path+'/'+fileName+'.xlsx') 
     work_sheets = sheets.Worksheets[0] 

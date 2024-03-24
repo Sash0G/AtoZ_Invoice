@@ -7,10 +7,10 @@ jobs:
     runs-on: windows-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       
     - name: Set up Python
-      uses: actions/setup-python@v3
+      uses: actions/setup-python@v4
       
     - name: Install dependencies
       run: |
@@ -28,7 +28,7 @@ jobs:
       run: |
         pyinstaller --windowed --hidden-import=tkinter --hidden-import=tkinter.filedialog --hidden-import=tkinter.font --hidden-import=distutils --hidden-import=customtkinter --icon=./Python_Code/Images/ship.ico ./Python_Code/AtoZ_Invoice.py
     - name: Release Executable
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
           name: my-executable
-          path: dist/
+          path: dist/AtoZ_Invoice/AtoZ_Invoice.exe
