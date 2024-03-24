@@ -1,14 +1,14 @@
-name: Builder
-on: 
-  push:
-    branches: [ main ]
-  pull_request: 
-    branches: [ main ]
+name: Run Builder Batch File
+on: [push]
 
 jobs:
-  build:
+  run_batch_file:
     runs-on: windows-latest
     steps:
-      - name: Run code
-        run: cmd ./Python_Code/Builder.bat
-        
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    
+    - name: Run Builder Batch File
+      shell: cmd
+      run: |
+        call ./Python_Code/Builder.bat
