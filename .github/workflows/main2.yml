@@ -13,11 +13,6 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.12.0'  # Change this to match your Python version
-
       - name: Install pyinstaller
         run: |
           pip install pyinstaller
@@ -25,4 +20,4 @@ jobs:
       - name: Run Batch File
         shell: cmd
         run: |
-          cals Builder.bat
+          call Builder.bat
