@@ -17,7 +17,7 @@ jobs:
     - name: Install dependencies
       run: |
         pip install customtkinter
-        pip install pyinstaller
+        pip install pyinstaller==6.1.0
         pip install pywin32
         pip install numpy
         pip install pillow==10.1.0
