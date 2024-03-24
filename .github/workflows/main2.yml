@@ -86,5 +86,5 @@ jobs:
         upload_url: '${{ steps.create-release.outputs.upload_url }}'
         asset_path: ./dist/AtoZ_Invoice/AtoZ_Invoice.exe
         asset_name: AtoZ_Invoice-v$${{ github.run_number }}.zip
-        # asset_content_type: application
+        asset_content_type: application
       
