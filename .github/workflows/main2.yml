@@ -16,3 +16,8 @@ jobs:
     - name: Build executable
       run: |
         pyinstaller --windowed --hidden-import=tkinter --hidden-import=tkinter.filedialog --hidden-import=tkinter.font --hidden-import=distutils --hidden-import=customtkinter --icon=./Python_Code/Images/ship.ico ./Python_Code/AtoZ_Invoice.py
+    - name: Release Executable
+      uses: actions/upload-artifact@v2
+      with:
+          name: my-executable
+          path: dist/AtoZ_Invoice.exe
