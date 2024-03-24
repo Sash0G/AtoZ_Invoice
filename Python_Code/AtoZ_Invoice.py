@@ -1026,7 +1026,7 @@ windowExit = ctk.CTkButton(root,text='Exit', command=root.quit).place(relwidth =
 #     POSITION text,
 #     RANK text
 # );
-        
+            
 # CREATE TABLE VESSELS(
 #     VESSELID INT,
 #     VESSEL text
