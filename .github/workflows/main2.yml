@@ -49,6 +49,7 @@ jobs:
           path: dist/
   release:
     name: Release project
+    permissions: write-all
     runs-on: ubuntu-latest
     needs: build
     steps:
