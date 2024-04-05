@@ -450,14 +450,14 @@ def ShowData(window,table,columns,t,editfunc):
     else: dataShow.place(relwidth=1,relheight=0.7,relx=0,rely=0.04)
     global trv
     
-    tree_scroll = ttk.Scrollbar(dataShow, orient='vertical')
+    tree_scroll = ctk.CTkScrollbar(dataShow, orientation='vertical')
     tree_scroll.pack(side=RIGHT, fill=BOTH)
     trv = ttk.Treeview(dataShow, columns=columns,show='headings',yscrollcommand=tree_scroll.set)    
     trv.pack(fill='both',expand='yes',padx=20, pady=10)
     for col in columns:
         trv.heading(col, text=col,anchor=W, command=lambda _col=col: 
                     treeview_sort_column(trv, _col, False,columns))
-    tree_scroll.config(command = trv.yview)
+    tree_scroll.configure(command = trv.yview)
     dataStyle()
     defaultData(table)
     trv.column(' ID',width=35,minwidth=35,stretch=NO) 
