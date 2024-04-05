@@ -474,7 +474,7 @@ def ShowData(window,table,columns,t,editfunc):
         trv.bind('<Return>',lambda e: editfunc())
     
         
-    
+     
     
 
 def editPerson():
