@@ -165,7 +165,7 @@ def ChooseList(widget,table):
     listWindow.geometry('%dx%d+%d+%d' % (600, 200, (addWindow.winfo_screenwidth()/2)-300, (addWindow.winfo_screenheight()/2)-100))
     
     if widget==nameE: 
-        columns = (' ID',' Number',' Име',' Телефон',' Имейл')
+        columns = (' ID',' Номер',' Име',' Телефон',' Имейл')
         SearchBar(listWindow,table,1,addPerson,columns)
     elif widget==positionE: 
         columns = (' ID',' Длъжност',' Ранг',' Департамент')
@@ -509,7 +509,7 @@ def addPerson(flag):
     if flag==1: personAddW.protocol("WM_DELETE_WINDOW",  lambda: [personAddW.destroy(),root.after(0, lambda:root.state('zoomed')),root.after(1, lambda:root.deiconify())])
     NewWindow(personAddW) #Window style
     SearchBar(personAddW,'personalDetails',0,0,0) #Search
-    columns = (' ID',' Number',' Име',' Телефон',' Имейл') # Show data
+    columns = (' ID',' Номер',' Име',' Телефон',' Имейл') # Show data
     ShowData(personAddW,'personalDetails',columns,0,editPerson)
 
     global dataAdd,crewID,name,phone,mail,eButton
@@ -534,8 +534,8 @@ def addPerson(flag):
         cButton = ctk.CTkButton(dataAdd,text='Изчисти', command=lambda: [crewID.delete(0,END),name.delete(0,END),phone.delete(0,END),mail.delete(0,END),eButton.place(relwidth = 0.045, relheight = 0.135,relx=0.226,rely=0.86),uButton.place_forget()]).place(relwidth = 0.037, relheight = 0.135,relx=0.184,rely=0.86)
         eButton = ctk.CTkButton(dataAdd, text='Редактирай',command=lambda: [ eButton.place_forget(),editPerson()])
         eButton.place(relwidth = 0.045, relheight = 0.135,relx=0.226,rely=0.86)
-    if flag==1: windowBack =ctk.CTkButton(personAddW,text='Back', command=lambda: [personAddW.destroy(),root.after(0, lambda:root.state('zoomed')),root.after(1, lambda:root.deiconify())]).place(relwidth = 0.15, relheight = 0.06,relx=0.40,rely=0.9)
-    else: windowBack =ctk.CTkButton(personAddW,text='Back', command=lambda: [personAddW.destroy()]).place(relwidth = 0.15, relheight = 0.06,relx=0.40,rely=0.9)
+    if flag==1: windowBack =ctk.CTkButton(personAddW,text='Назад', command=lambda: [personAddW.destroy(),root.after(0, lambda:root.state('zoomed')),root.after(1, lambda:root.deiconify())]).place(relwidth = 0.15, relheight = 0.06,relx=0.40,rely=0.9)
+    else: windowBack =ctk.CTkButton(personAddW,text='Назад', command=lambda: [personAddW.destroy()]).place(relwidth = 0.15, relheight = 0.06,relx=0.40,rely=0.9)
     
 
 def addContract():
@@ -553,7 +553,7 @@ def addContract():
 
     addButton = ctk.CTkButton(contractAddW, text='Добави',command=lambda:[addContractData(0)],fg_color="green",hover_color="darkgreen").place(relwidth = 0.06, relheight = 0.04,relx=0.02,rely=0.9)
     delete =ctk.CTkButton(contractAddW, text='Изтрий',command=lambda: deleteRow('contracts'),fg_color="red",hover_color="darkred").place(relwidth = 0.06, relheight = 0.04,relx=0.1,rely=0.9)
-    windowBack =ctk.CTkButton(contractAddW,text='Back', command=lambda: [contractAddW.destroy(),root.after(0, lambda:root.state('zoomed')),root.after(1, lambda:root.deiconify())]).place(relwidth = 0.15, relheight = 0.06,relx=0.40,rely=0.9)
+    windowBack =ctk.CTkButton(contractAddW,text='Назад', command=lambda: [contractAddW.destroy(),root.after(0, lambda:root.state('zoomed')),root.after(1, lambda:root.deiconify())]).place(relwidth = 0.15, relheight = 0.06,relx=0.40,rely=0.9)
     eButton = ctk.CTkButton(contractAddW, text='Редактирай',command=editContract)
     eButton.place(relwidth = 0.06, relheight = 0.04,relx=0.18,rely=0.9)
 
@@ -606,8 +606,8 @@ def addVessel(flag):
         cButton = ctk.CTkButton(dataAdd,text='Изчисти', command=lambda: [name.delete(0,END),company.delete(0,END),eButton.place(relwidth = 0.045, relheight = 0.135,relx=0.226,rely=0.63),uButton.place_forget()]).place(relwidth = 0.037, relheight = 0.135,relx=0.184,rely=0.63)
         eButton = ctk.CTkButton(dataAdd, text='Редактирай',command=lambda: [ eButton.place_forget(),editVessel()])
         eButton.place(relwidth = 0.045, relheight = 0.135,relx=0.226,rely=0.63)
-    if flag==1:windowBack =ctk.CTkButton(vesselAddW,text='Back', command=lambda: [vesselAddW.destroy(),root.after(0, lambda:root.state('zoomed')),root.after(1, lambda:root.deiconify())]).place(relwidth = 0.15, relheight = 0.06,relx=0.40,rely=0.9)
-    else: windowBack =ctk.CTkButton(vesselAddW,text='Back', command=lambda: [vesselAddW.destroy()]).place(relwidth = 0.15, relheight = 0.06,relx=0.40,rely=0.9)
+    if flag==1:windowBack =ctk.CTkButton(vesselAddW,text='Назад', command=lambda: [vesselAddW.destroy(),root.after(0, lambda:root.state('zoomed')),root.after(1, lambda:root.deiconify())]).place(relwidth = 0.15, relheight = 0.06,relx=0.40,rely=0.9)
+    else: windowBack =ctk.CTkButton(vesselAddW,text='Назад', command=lambda: [vesselAddW.destroy()]).place(relwidth = 0.15, relheight = 0.06,relx=0.40,rely=0.9)
     
 
 def editPosition():
@@ -666,8 +666,8 @@ def addPosition(flag):
         cButton = ctk.CTkButton(dataAdd,text='Изчисти', command=lambda: [position.delete(0,END),varR.set(""),varTC.set(""),eButton.place(relwidth = 0.045, relheight = 0.13,relx=0.226,rely=0.86),uButton.place_forget()]).place(relwidth = 0.037, relheight = 0.135,relx=0.184,rely=0.86)
         eButton = ctk.CTkButton(dataAdd, text='Редактирай',command=lambda: [ eButton.place_forget(),editPosition()])
         eButton.place(relwidth = 0.045, relheight = 0.13,relx=0.226,rely=0.86)
-    if flag==1:windowBack =ctk.CTkButton(positionAddW,text='Back', command=lambda: [positionAddW.destroy(),root.after(0, lambda:root.state('zoomed')),root.after(1, lambda:root.deiconify())]).place(relwidth = 0.15, relheight = 0.06,relx=0.40,rely=0.9)
-    else: windowBack =ctk.CTkButton(positionAddW,text='Back', command=lambda: [positionAddW.destroy()]).place(relwidth = 0.15, relheight = 0.06,relx=0.40,rely=0.9)
+    if flag==1:windowBack =ctk.CTkButton(positionAddW,text='Назад', command=lambda: [positionAddW.destroy(),root.after(0, lambda:root.state('zoomed')),root.after(1, lambda:root.deiconify())]).place(relwidth = 0.15, relheight = 0.06,relx=0.40,rely=0.9)
+    else: windowBack =ctk.CTkButton(positionAddW,text='Назад', command=lambda: [positionAddW.destroy()]).place(relwidth = 0.15, relheight = 0.06,relx=0.40,rely=0.9)
     
 
 def browse_button():
@@ -689,14 +689,14 @@ def createApendix():
     varComp = StringVar(value='')
     first = today.replace(day=1)
     last_month = first - timedelta(days=1)
-    varM = StringVar(value=last_month.strftime('%B'))
+    varM = StringVar(value=monthBg[last_month.strftime('%B')])
     typeCrew = ctk.CTkOptionMenu(apendixWindow,values=['general','riding','training'],variable=varTP).place(relwidth = 0.4, relheight = 0.06,relx=0.4,rely=0.1)
     typeCrewL = ctk.CTkLabel(apendixWindow,text='Тип на персонала',anchor=W).place(relwidth = 0.2, relheight = 0.06,relx=0.1,rely=0.1)
     companyL = ctk.CTkLabel(apendixWindow,text='Компания',anchor=W).place(relwidth = 0.15, relheight = 0.06,relx=0.1,rely=0.3)
     companyChoose = ctk.CTkOptionMenu(apendixWindow, variable=varComp,values=['AIDA','Costa','CCSL']).place(relwidth = 0.4, relheight = 0.06,relx=0.4,rely=0.3)
     monthL = ctk.CTkLabel(apendixWindow,text='Месец',anchor=W).place(relwidth = 0.15, relheight = 0.06,relx=0.1,rely=0.5)
-    monthChoose = ctk.CTkOptionMenu(apendixWindow,variable = varM, values=['January','February','March','April','May','June','July','August','September','October','November','December']).place(relwidth = 0.4, relheight = 0.06,relx=0.4,rely=0.5)
-    windowBack =ctk.CTkButton(apendixWindow,text='Back', command=lambda: [apendixWindow.destroy(),root.after(0, lambda:root.state('zoomed')),root.after(1, lambda:root.deiconify())]).place(relwidth = 0.15, relheight = 0.06,relx=0.40,rely=0.9)
+    monthChoose = ctk.CTkOptionMenu(apendixWindow,variable = varM, values=['Януари','Февруари','Март','Април','Май','Юни','Юли','Август','Септември','Октомври','Ноември','Декември']).place(relwidth = 0.4, relheight = 0.06,relx=0.4,rely=0.5)
+    windowBack =ctk.CTkButton(apendixWindow,text='Назад', command=lambda: [apendixWindow.destroy(),root.after(0, lambda:root.state('zoomed')),root.after(1, lambda:root.deiconify())]).place(relwidth = 0.15, relheight = 0.06,relx=0.40,rely=0.9)
 
     yearL = ctk.CTkLabel(apendixWindow,text='Година',anchor=W).place(relwidth = 0.15, relheight = 0.06,relx=0.1,rely=0.7)
     year = ctk.CTkEntry(apendixWindow)
@@ -711,8 +711,8 @@ def dateCheck(dOn, dOff):
     date_obj = datetime.strptime(dOn, date_format)
     if dOff!='':
         date_obj2 = datetime.strptime(dOff, date_format)
-    date_obj3 = datetime.strptime(varM.get(), '%B')
-    date_obj4 = datetime.strptime(varM.get(), '%B')
+    date_obj3 = datetime.strptime(monthN[varM.get()], '%B')
+    date_obj4 = datetime.strptime(monthN[varM.get()], '%B')
     t=0
     t2=0
     if date_obj.year < int(year.get()) or (date_obj.year ==  int(year.get()) and date_obj.month<=date_obj3.month):t=1
@@ -795,8 +795,8 @@ def generateApendix():
     for i in range(len(data)):data[i]['number']=i+1
     person_info2 = {}    
     person_info2['contracts'] = data
-    person_info2['monthEn'] = varM.get()
-    person_info2['monthBg'] = monthN[varM.get()]
+    person_info2['monthEn'] = monthN[varM.get()]
+    person_info2['monthBg'] = varM.get()
     person_info2['endDate'] = date(int(year.get()),monthK[varM.get()],monthrange(int(year.get()), monthK[varM.get()])[1]).strftime(date_format2)
     person_info2['number'] = varComp.get()+varTP.get()[0]+str(int(monthK[varM.get()]/10))+str(monthK[varM.get()]%10)+year.get()
     print(str(monthK[varM.get()]/10))
@@ -986,8 +986,9 @@ p=root.winfo_screenheight()
 kW = w/1920
 kH = h/1080
 print(os.path.dirname(__file__)+'/config.txt')
-monthK = {'January': 1, 'February': 2, 'March': 3, 'April': 4, 'May': 5, 'June': 6, 'July': 7, 'August': 8, 'September': 9, 'October': 10, 'November': 11, 'December': 12}
-monthN = {'January': 'Януари', 'February': 'Февруари', 'March': 'Март', 'April': 'Април', 'May': 'Май', 'June': 'Юни', 'July': 'Юли', 'August': 'Август', 'September': 'Септември', 'October': 'Октомври', 'November': 'Ноември', 'December': 'Декември'}
+monthK = {'Януари': 1, 'Февруари': 2, 'Март': 3, 'Април': 4, 'Май': 5, 'Юни': 6, 'Юли': 7, 'Август': 8, 'Септември': 9, 'Октомври': 10, 'Ноември': 11, 'Декември': 12}
+monthBg = {'January': 'Януари', 'February': 'Февруари', 'March': 'Март', 'April': 'Април', 'May': 'Май', 'June': 'Юни', 'July': 'Юли', 'August': 'Август', 'September': 'Септември', 'October': 'Октомври', 'November': 'Ноември', 'December': 'Декември'}
+monthN = {'Януари': 'January', 'Февруари': 'February', 'Март': 'March', 'Април': 'April', 'Май': 'May', 'Юни': 'June', 'Юли': 'July', 'Август': 'August', 'Септември': 'September', 'Октомври': 'October', 'Ноември': 'November', 'Декември': 'December'}
 today = datetime.now()
 personAdd =ctk.CTkButton(root,text='Добавяне на човек',font=('Arial',17),border_width=2,border_color='#242930',command=lambda: addPerson(1))
 personAdd.place(relwidth = 0.25, relheight = 0.06,relx=0.07,rely=0.22)
@@ -998,7 +999,7 @@ apendixMake = ctk.CTkButton(root,text='Справки',font=('Arial',17),border_
 image = PhotoImage(file=os.path.dirname(__file__)+'/Images/settings.png')
 image=image.subsample(8,8)
 settings = ctk.CTkButton(root,image=image,text='',fg_color='#242930',hover_color='#242930',command=setting).place(relx=0,rely=0.9)
-windowExit = ctk.CTkButton(root,text='Exit', command=root.quit).place(relwidth = 0.15, relheight = 0.06,relx=0.40,rely=0.9)
+windowExit = ctk.CTkButton(root,text='Изход', command=root.quit).place(relwidth = 0.15, relheight = 0.06,relx=0.40,rely=0.9)
 
 
 # conn = sqlite3.connect(pathGlobal+'/data.db')
