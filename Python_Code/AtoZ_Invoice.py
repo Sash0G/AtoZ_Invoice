@@ -16,6 +16,7 @@ from win32com import client
 from win32com.client import Dispatch
 from win32api import GetSystemMetrics
 from tkinter import filedialog
+from CTkMessagebox import CTkMessagebox
 # import pandas as pd
 ctk.set_appearance_mode('Dark')
 ctk.set_default_color_theme('blue')
@@ -393,8 +394,9 @@ def defaultData(table):
         trv.after(0,lambda: trv.focus(trv.get_children()[0]))
 
 def deleteRow(table):
-    record = messagebox.askokcancel('','This record will be permamnetly deleted!',icon='warning')
-    if record == 0:
+    record = CTkMessagebox(title='Warning!',message='This record will be permamnetly deleted!',icon='warning', option_1="OK", option_2="Cancel",justify='center',option_focus="OK",icon_size=[40,40])
+    record.info._text_label.configure(wraplength=400)
+    if record.get() != "OK":
         return
     else:
         if table=='contracts':items = trv.selection()

@@ -28,6 +28,7 @@ jobs:
         pip install openpyxl==3.0.9
         pip install xltpl==0.19
         pip install wheel
+        pip install CTkMessagebox
         
     - name: Build executable
       run: |
