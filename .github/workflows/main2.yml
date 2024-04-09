@@ -7,7 +7,7 @@ name: PyInstaller Build
 on:
   push:
     branches:
-      - main
+      - main 
 
 jobs:
   build:
