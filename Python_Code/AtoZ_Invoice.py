@@ -673,7 +673,6 @@ def addPosition(flag):
 
 def browse_button():
     config = configparser.ConfigParser()
-    print(os.path.dirname(__file__)+'/config.txt')
     config.read(os.path.dirname(__file__)+'/config.txt')
     filename = filedialog.askdirectory()
     config['config']['path']=filename
@@ -738,7 +737,6 @@ def generateApendix():
                 AND vessels.company = ?
                 AND contracts.typeCrew = ?""",(varComp.get(),varTP.get(),))
     data = [dict(zip([column[0] for column in c.description], row)) for row in c.fetchall()]
-    print(data)
     c.execute("""SELECT * from prices""")
     currentDate = datetime(int(year.get()),monthK[varM.get()],1)
     priceData = c.fetchall()
@@ -749,20 +747,16 @@ def generateApendix():
         object = datetime.strptime(data[i]['dateOn'], date_format)
         noDeploy=False
         if object.month != monthK[varM.get()] or object.year!=int(year.get()): noDeploy=True
-        print(noDeploy)
         if(data[i]['dateOff']==''):
             data[i]['dateOff']=str(monthrange(int(year.get()), monthK[varM.get()])[1])+"/"+str('%02d' % monthK[varM.get()])+"/"+year.get()
         object2=datetime.strptime(data[i]['dateOff'], date_format)
         if object2.month != monthK[varM.get()] or object2.year!=int(year.get()):
             data[i]['dateOff']=str(monthrange(int(year.get()), monthK[varM.get()])[1])+"/"+str('%02d' % monthK[varM.get()])+"/"+year.get()
         if object.month!=monthK[varM.get()] or object.year!=int(year.get()):
-            print(data[i]['dateOn'])
             data[i]['dateOn']="01/"+str('%02d' % monthK[varM.get()])+"/"+year.get()
-            print(data[i]['dateOn'])
         object = datetime.strptime(data[i]['dateOn'], date_format)
         object2=datetime.strptime(data[i]['dateOff'], date_format)
         data[i]['daysOn']=(date(object2.year, object2.month, object2.day)- date(object.year, object.month, object.day)).days+1
-        print(data[i]['crewName'],data[i]['rank'],data[i]['type'])
         if varComp.get()=='AIDA':
             if data[i]['rank']=='officer':
                 if data[i]['type'] == 'Deck and Engine':
@@ -782,7 +776,6 @@ def generateApendix():
             if data[i]['rank']=='officer':
                 if data[i]['type'] == 'Deck and Engine':
                     data[i]['deploymentFee']=priceData[p][0]
-                    print(data[i]['crewName'])
                     data[i]['manningFee']=round(priceData[p][2]/30,2)*data[i]['daysOn']   
                 else:
                     data[i]['deploymentFee']=priceData[p][4]
@@ -802,31 +795,24 @@ def generateApendix():
     data.sort(key=lambda t:t['crewName'].split(' ')[1])
     for i in range(len(data)):data[i]['number']=i+1
     person_info2 = {}    
-    print(priceData[p][2])
     person_info2['contracts'] = data
     person_info2['monthEn'] = monthN[varM.get()]
     person_info2['monthBg'] = varM.get()
     person_info2['endDate'] = date(int(year.get()),monthK[varM.get()],monthrange(int(year.get()), monthK[varM.get()])[1]).strftime(date_format2)
     person_info2['number'] = varComp.get()+varTP.get()[0]+str(int(monthK[varM.get()]/10))+str(monthK[varM.get()]%10)+year.get()
-    print(str(monthK[varM.get()]/10))
     person_info2['year'] = year.get()
-    print(data)
     payloads = [person_info2]
     writer.render_book(payloads=payloads)
     fileName = varComp.get()+"_"+varTP.get()[0]+"_"+str(int(monthK[varM.get()]/10))+str(monthK[varM.get()]%10)+"."+year.get()
-    print(fileName)
     config = configparser.ConfigParser()
     config.read(os.path.dirname(__file__)+'/config.txt')
-    print(config.sections())
     path = config.get('config', 'path')
     
     fname = os.path.join(path, fileName+'.xlsx')
-    print(fname)
     writer.save(fname)
     excel = client.Dispatch('Excel.Application') 
     sheets = excel.Workbooks.Open(path+'/'+fileName+'.xlsx') 
     work_sheets = sheets.Worksheets[0] 
-    print(path)
     if  os.path.exists(path+'/'+fileName+'.pdf'):os.remove(path+'/' + fileName+'.pdf')
     work_sheets.ExportAsFixedFormat(0,path+'/'+fileName+'.pdf') 
     path+='/'+fileName+'.xlsx'
@@ -852,7 +838,6 @@ def LoadPrices():
     c = conn.cursor()
     c.execute("""SELECT oid,* FROM prices WHERE oid={}""".format(str(item['values'][0])))
     data=c.fetchall()
-    print(data)
     deOfficerDeploy.insert(0,data[0][1])
     deRatingDeploy.insert(0,data[0][2])
     deOfficerMann.insert(0,data[0][3])
@@ -994,7 +979,6 @@ root.geometry('%dx%d+%d+%d' % (w, h, x, y))
 p=root.winfo_screenheight()
 kW = w/1920
 kH = h/1080
-print(os.path.dirname(__file__)+'/config.txt')
 monthK = {'Януари': 1, 'Февруари': 2, 'Март': 3, 'Април': 4, 'Май': 5, 'Юни': 6, 'Юли': 7, 'Август': 8, 'Септември': 9, 'Октомври': 10, 'Ноември': 11, 'Декември': 12}
 monthBg = {'January': 'Януари', 'February': 'Февруари', 'March': 'Март', 'April': 'Април', 'May': 'Май', 'June': 'Юни', 'July': 'Юли', 'August': 'Август', 'September': 'Септември', 'October': 'Октомври', 'November': 'Ноември', 'December': 'Декември'}
 monthN = {'Януари': 'January', 'Февруари': 'February', 'Март': 'March', 'Април': 'April', 'Май': 'May', 'Юни': 'June', 'Юли': 'July', 'Август': 'August', 'Септември': 'September', 'Октомври': 'October', 'Ноември': 'November', 'Декември': 'December'}
