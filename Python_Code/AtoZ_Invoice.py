@@ -471,6 +471,7 @@ def ShowData(window,table,columns,t,editfunc):
         trv.bind('<Return>',lambda e:[ eButton.place_forget(),editfunc()])
     if t==1:
         trv.bind('<Double-1>',lambda e: editfunc(table))
+        trv.bind('<Return>',lambda e: editfunc(table))
     if t==2:
         trv.bind('<Double-1>',lambda e: editfunc())
         trv.bind('<Return>',lambda e: editfunc())
@@ -746,18 +747,24 @@ def generateApendix():
     p-=1
     for i in range(len(data)):
         object = datetime.strptime(data[i]['dateOn'], date_format)
+        noDeploy=False
+        if object.month != monthK[varM.get()] or object.year!=int(year.get()): noDeploy=True
+        print(noDeploy)
         if(data[i]['dateOff']==''):
-            data[i]['dateOff']=str(monthrange(int(year.get()), monthK[varM.get()])[1])+"/"+str('%02d' % object.month)+"/"+year.get()
+            data[i]['dateOff']=str(monthrange(int(year.get()), monthK[varM.get()])[1])+"/"+str('%02d' % monthK[varM.get()])+"/"+year.get()
         object2=datetime.strptime(data[i]['dateOff'], date_format)
         if object2.month != monthK[varM.get()] or object2.year!=int(year.get()):
-            data[i]['dateOff']=str(monthrange(int(year.get()), monthK[varM.get()])[1])+"/"+str('%02d' % object.month)+"/"+year.get()
-        elif object.month!=monthK[varM.get()] or object.year!=int(year.get()):
-            data[i]['dateOn']="01/"+str('%02d' % object2.month)+"/"+year.get()
+            data[i]['dateOff']=str(monthrange(int(year.get()), monthK[varM.get()])[1])+"/"+str('%02d' % monthK[varM.get()])+"/"+year.get()
+        if object.month!=monthK[varM.get()] or object.year!=int(year.get()):
+            print(data[i]['dateOn'])
+            data[i]['dateOn']="01/"+str('%02d' % monthK[varM.get()])+"/"+year.get()
+            print(data[i]['dateOn'])
         object = datetime.strptime(data[i]['dateOn'], date_format)
         object2=datetime.strptime(data[i]['dateOff'], date_format)
         data[i]['daysOn']=(date(object2.year, object2.month, object2.day)- date(object.year, object.month, object.day)).days+1
+        print(data[i]['crewName'],data[i]['rank'],data[i]['type'])
         if varComp.get()=='AIDA':
-            if data[i]['rank']=='Officer':
+            if data[i]['rank']=='officer':
                 if data[i]['type'] == 'Deck and Engine':
                     data[i]['deploymentFee']=priceData[p][0]
                     data[i]['manningFee']=data[i]['daysOn']/monthrange(int(year.get()), monthK[varM.get()])[1]*priceData[p][2]
@@ -772,9 +779,10 @@ def generateApendix():
                     data[i]['deploymentFee']=priceData[p][5]
                     data[i]['manningFee']=data[i]['daysOn']/monthrange(int(year.get()), monthK[varM.get()])[1]*priceData[p][7]
         else:
-            if data[i]['rank']=='Officer':
+            if data[i]['rank']=='officer':
                 if data[i]['type'] == 'Deck and Engine':
                     data[i]['deploymentFee']=priceData[p][0]
+                    print(data[i]['crewName'])
                     data[i]['manningFee']=round(priceData[p][2]/30,2)*data[i]['daysOn']   
                 else:
                     data[i]['deploymentFee']=priceData[p][4]
@@ -789,11 +797,12 @@ def generateApendix():
         if data[i]['cadet']==1:
             data[i]['deploymentFee']=priceData[p][1]
             data[i]['manningFee']=0
-        if data[i]['vesselChange']==1 or object.month != monthK[varM.get()] or object.year!=int(year.get()):
+        if data[i]['vesselChange']==1 or noDeploy==True:
             data[i]['deploymentFee']=''
     data.sort(key=lambda t:t['crewName'].split(' ')[1])
     for i in range(len(data)):data[i]['number']=i+1
     person_info2 = {}    
+    print(priceData[p][2])
     person_info2['contracts'] = data
     person_info2['monthEn'] = monthN[varM.get()]
     person_info2['monthBg'] = varM.get()
