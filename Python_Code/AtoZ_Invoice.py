@@ -68,7 +68,7 @@ def addPositionData():
         c.execute("""INSERT INTO positions VALUES(:position,:rank,:type)""", { 'position':position.get(),'rank':varR.get(),'type':varTC.get()})
         conn.commit()
         conn.close()
-        defaultData('positions')
+        defaultData('positions',0)
 
 def addPersonData():
     if name.get()=='' or crewID.get()=='':
@@ -79,7 +79,7 @@ def addPersonData():
         c.execute("""INSERT INTO personalDetails VALUES( :crewID,:crewName,:phoneNumber,:mail)""", {'crewID':crewID.get(), 'crewName':name.get(),'phoneNumber':phone.get(),'mail':mail.get()})
         conn.commit()
         conn.close()
-        defaultData('personalDetails')
+        defaultData('personalDetails',0)
 
 def addVesselData():
     if name.get()=='':
@@ -90,7 +90,7 @@ def addVesselData():
         c.execute("""INSERT INTO vessels VALUES(:vessel,:company)""", { 'vessel':name.get(),'company':company.get()})
         conn.commit()
         conn.close()
-        defaultData('vessels')
+        defaultData('vessels',0)
 
 def onDoubleClick(table):
     item = trv.item(trv.focus())
@@ -373,10 +373,27 @@ def UpDown(i):
         sEntry.bind('<Down>',lambda e:UpDown((i+1)%len(trv.get_children())))
         sEntry.bind('<Up>',lambda e:UpDown((i-1+len(trv.get_children()))%len(trv.get_children())))
 
-def defaultData(table):
+def Check(date):
+    if date == '': return 1
+    date_format = '%d/%m/%Y'
+    date_obj = datetime.strptime(date, date_format)
+    print(date)
+    if date_obj <  datetime.now(): return 0
+    return 1
+
+def defaultData(table,k):
     conn = sqlite3.connect(pathGlobal+'/data.db')
     c = conn.cursor()
-    if table=='contracts':
+    # print(Check("22/04/2024"))
+    conn.create_function('dateCheck', 1, Check)
+    if table=='contracts' and k==0:
+        c.execute("""SELECT contracts.oid,personalDetails.crewName,positions.position,positions.rank,contracts.contractType,personalDetails.crewID,vessels.vessel,contracts.dateOn,contracts.dateOff
+                     FROM contracts
+                     INNER JOIN personalDetails ON personalDetails.oid=contracts.crewID
+                     INNER JOIN positions ON positions.oid = contracts.positionID
+                     INNER JOIN vessels ON vessels.oid = contracts.vesselID
+                     WHERE dateCheck(contracts.dateOff)=1""")
+    elif table=='contracts' and k==1:
         c.execute("""SELECT contracts.oid,personalDetails.crewName,positions.position,positions.rank,contracts.contractType,personalDetails.crewID,vessels.vessel,contracts.dateOn,contracts.dateOff
                      FROM contracts
                      INNER JOIN personalDetails ON personalDetails.oid=contracts.crewID
@@ -408,7 +425,7 @@ def deleteRow(table):
             c.execute("""Delete from {} where oid = ? """.format(table),(trv.item(item,'values')[0],))
         conn.commit()
         conn.close()
-        defaultData(table)
+        defaultData(table,0)
         # if(trv)   
 
 def SearchBar(window,table,t,func,columns):
@@ -461,7 +478,7 @@ def ShowData(window,table,columns,t,editfunc):
                     treeview_sort_column(trv, _col, False,columns))
     tree_scroll.configure(command = trv.yview)
     dataStyle()
-    defaultData(table)
+    defaultData(table,0)
     trv.column(' ID',width=35,minwidth=35,stretch=NO) 
     for i in range(1,len(columns)):
         trv.column(columns[i],width=100,stretch=YES)
@@ -475,8 +492,8 @@ def ShowData(window,table,columns,t,editfunc):
     if t==2:
         trv.bind('<Double-1>',lambda e: editfunc())
         trv.bind('<Return>',lambda e: editfunc())
-    
-        
+    if t==0 or t==1:
+        sEntry.after(0,sEntry.focus_force)     
      
     
 
@@ -501,7 +518,7 @@ def updatePersonData(k):
     c.execute('UPDATE personalDetails SET crewID=?,crewName=?,phoneNumber=?,mail=? where oid=?',(crewID.get(),name.get(),phone.get(),mail.get(),k))
     conn.commit()
     conn.close()
-    defaultData('personalDetails')
+    defaultData('personalDetails',0)
 
 def addPerson(flag):
     # Example(root).pack(fill='both', expand=True)
@@ -557,6 +574,9 @@ def addContract():
     windowBack =ctk.CTkButton(contractAddW,text='Назад', command=lambda: [contractAddW.destroy(),root.after(0, lambda:root.state('zoomed')),root.after(1, lambda:root.deiconify())]).place(relwidth = 0.15, relheight = 0.06,relx=0.40,rely=0.9)
     eButton = ctk.CTkButton(contractAddW, text='Редактирай',command=editContract)
     eButton.place(relwidth = 0.06, relheight = 0.04,relx=0.18,rely=0.9)
+    sButton = ctk.CTkButton(contractAddW, text='Покажи всички',command=lambda:[defaultData('contracts',1),sButton.place_forget(),hButton.place(relwidth = 0.06, relheight = 0.04,relx=0.26,rely=0.9)])
+    sButton.place(relwidth = 0.06, relheight = 0.04,relx=0.26,rely=0.9)
+    hButton = ctk.CTkButton(contractAddW, text='Скрий всички',command=lambda:[defaultData('contracts',0),hButton.place_forget(),sButton.place(relwidth = 0.06, relheight = 0.04,relx=0.26,rely=0.9)])
 
 def editVessel():
     item = trv.item(trv.focus())
@@ -577,7 +597,7 @@ def updateVesselData(k):
     c.execute('UPDATE vessels SET vessel=?,company=? where oid=?',(name.get(),company.get(),k))
     conn.commit()
     conn.close()
-    defaultData('vessels')
+    defaultData('vessels',0)
 
 def addVessel(flag): 
     global vesselAddW
@@ -630,7 +650,7 @@ def updatePositionData(k):
     c.execute('UPDATE positions SET position=?,rank=?,type=? where oid=?',(position.get(),rank.get(),varTC.get(),k))
     conn.commit()
     conn.close()
-    defaultData('positions')
+    defaultData('positions',0)
 
 def addPosition(flag):
     # Example(root).pack(fill='both', expand=True)
@@ -856,7 +876,7 @@ def updatePrice(k):
     c.execute('UPDATE prices SET deOfficerDeploy=?,deRatingDeploy=?,deOfficerMann=?,deRatingMann=?,hOfficerDeploy=?,hRatingDeploy=?,hOfficerMann=?,hRatingMann=?,date=? where oid=?',(deOfficerDeploy.get(),deRatingDeploy.get(),deOfficerMann.get(),deRatingMann.get(),hOfficerDeploy.get(),hRatingDeploy.get(),hOfficerMann.get(),hRatingMann.get(),dateP.get(),k))
     conn.commit()
     conn.close()
-    defaultData('prices')
+    defaultData('prices',0)
     addPriceDataW.destroy()
 
 def addPriceData():
@@ -865,7 +885,7 @@ def addPriceData():
     c.execute("""INSERT INTO prices VALUES( :deOfficerDeploy,:deRatingDeploy,:deOfficerMann,:deRatingMann,:hOfficerDeploy,:hRatingDeploy,:hOfficerMann,:hRatingMann,:date)""", {'deOfficerDeploy':deOfficerDeploy.get(), 'deRatingDeploy':deRatingDeploy.get(),'deOfficerMann':deOfficerMann.get(),'deRatingMann':deRatingMann.get(),'hOfficerDeploy':hOfficerDeploy.get(), 'hRatingDeploy':hRatingDeploy.get(),'hOfficerMann':deOfficerMann.get(),'hRatingMann':deRatingMann.get(),'date':dateP.get()})
     conn.commit()
     conn.close()
-    defaultData('prices')
+    defaultData('prices',0)
     addPriceDataW.destroy()
 
 def addPrice(k):
